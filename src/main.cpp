@@ -26,16 +26,28 @@ int main() {
     Ull testUll("test.dat", "test_free.dat");
 
     // Save current time(hhmmss as integer) to file
-    // vector<int> array;
-    // for (int i = 1; i <= 200; i++) testUll.addNode(UllNode("CppPrimer", i));
+    // set<int> array;
+    // for (int i = 1; i <= 1000; i++) {
+    //     testUll.addNode(UllNode("CppPrimer", i));
+    // }
+    // testUll.show();
+    // for (int i = 1; i <= 1000; i++) {
+    //     testUll.deleteNode(UllNode("CppPrimer", i));
+        
+    // }
 
     // for (int i = 1; i <= 150; i++) {
     //     testUll.deleteNode(UllNode("CppPrimer", i));
     // }
 
-    // for (int i = 201; i <= 400; i++) testUll.addNode(UllNode("CppPrimer", i));
-    // testUll.findNode("book_name20", array);
-    // cout << array.front() << endl;
+    // for (int i = 201; i <= 400; i++) testUll.addNode(UllNode("CppPrimer",
+    // i));
+    // testUll.findNode("CppPrimer", array);
+    // while (!array.empty()) {
+    //     cout << *array.begin() << " ";
+    //     array.erase(array.begin());
+    // }
+    // cout << endl;
     // Print all entries in file.
     // std::vector<int> retVec;
     // testUll.findNode("Bello ACM!", retVec);
