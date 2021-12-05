@@ -203,11 +203,13 @@ void Ull::deleteNode(const UllNode &node) {
                 if (node == tmp.array[i]) break;
             if (i == tmp.num) continue;
 
+            strcpy(tmp.array[i].str, "");
+            tmp.array[i].index = 0;
+            
             for (int j = i + 1; j < tmp.num; j++)  //
                 tmp.array[j - 1] = tmp.array[j];
             tmp.num--;
-            strcpy(tmp.array[i].str, "");
-            tmp.array[i].index = 0;
+
             strcpy(tmp.start, tmp.array[0].str);
             strcpy(tmp.end, tmp.array[tmp.num - 1].str);
             // if (tmp.num > BLOCK_MERGE_THRESHOLD || block_num == 1) {
