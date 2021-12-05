@@ -8,7 +8,7 @@
 #include "unrolled_linklist.hpp"
 
 int main() {
-    freopen("test.in", "r", stdin);
+    // freopen("test.in", "r", stdin);
     // freopen("test.out", "w", stdout);
     // ! Notice
     // If you are using dynamic-link library, the DLL

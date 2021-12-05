@@ -41,7 +41,6 @@ Ull::Ull(const string &file_name, const string &file_free)
         ofstream out(file_name, ofstream::out);
         int block_num = 1;
         UllBlock tmp;
-        tmp.if_occupied = true;
         ffile.open(file_name, fstream::in | fstream::binary | fstream::out);
         ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
         ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
@@ -73,20 +72,17 @@ void Ull::addNode(const UllNode &book) {
 
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (!tmp.if_occupied) continue;
-        if (strcmp(tmp.end, book.str) >= 0) {
+        if (strcmp(tmp.end, book.str) >= 0)
             for (int i = 0; i < tmp.num; i++)
                 if (tmp.array[i] == book) {
                     ffile.close();
                     return;
                 }
-        }
     }
     ffile.seekg(sizeof(int));
 
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (!tmp.if_occupied) continue;
         if (strcmp(book.str, tmp.end) <= 0) break;
     }
     if (index == block_num) index--;
@@ -136,7 +132,6 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
                      sizeof(spare_block_index));
     file_spare.close();
     UllBlock tmp;
-    tmp.if_occupied = true;
     for (int i = BLOCK_SPLIT_LEFT; i < obj.num; i++)
         tmp.array[i - BLOCK_SPLIT_LEFT] = obj.array[i];
     tmp.num = obj.num - BLOCK_SPLIT_LEFT;
@@ -173,7 +168,6 @@ void Ull::findNode(const string &key, set<int> &array) {
 
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (!tmp.if_occupied) continue;
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             for (int i = 0; i < tmp.num; i++)
                 if (strcmp(tmp.array[i].str, key.c_str()) == 0)
@@ -197,7 +191,6 @@ void Ull::deleteNode(const UllNode &node) {
     int i = 0, index = 0;
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (!tmp.if_occupied) continue;
         if (strcmp(node.str, tmp.end) <= 0) {
             for (i = 0; i < tmp.num; i++)  // find the position in the block
                 if (node == tmp.array[i]) break;
@@ -205,15 +198,13 @@ void Ull::deleteNode(const UllNode &node) {
 
             strcpy(tmp.array[i].str, "");
             tmp.array[i].index = 0;
-            
+
             for (int j = i + 1; j < tmp.num; j++)  //
                 tmp.array[j - 1] = tmp.array[j];
             tmp.num--;
 
             strcpy(tmp.start, tmp.array[0].str);
             strcpy(tmp.end, tmp.array[tmp.num - 1].str);
-            // if (tmp.num > BLOCK_MERGE_THRESHOLD || block_num == 1) {
-            if (tmp.num == 0 && block_num != 1) tmp.if_occupied = false;
             ffile.seekp(sizeof(int) + index * sizeof(UllBlock));
             ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
             ffile.close();
@@ -223,48 +214,6 @@ void Ull::deleteNode(const UllNode &node) {
     ffile.close();
 }
 
-// types of args can be modified if the program is too slow
-// void Ull::mergeBlock(UllBlock &tmp1, UllBlock &tmp2, const int &index1,
-//                      const int &index2) {
-//     // index1 <- index2
-//     int block_num, put_index = 0;
-//     ffile.seekg(0);
-//     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
-//     file_spare.open(fio_name, fstream::in | fstream::out | fstream::binary);
-//     file_spare.seekg(0);
-//     file_spare.read(reinterpret_cast<char *>(spare_block_index),
-//                     sizeof(spare_block_index));
-//     spare_block_index[0]++;
-//     spare_block_index[spare_block_index[0]] = index2;
-
-//     file_spare.seekp(0);
-//     file_spare.write(reinterpret_cast<char *>(spare_block_index),
-//                      sizeof(spare_block_index));
-//     file_spare.close();
-//     // copy
-//     for (int i = 0; i < tmp2.num; i++) tmp1.array[tmp1.num + i] =
-//     tmp2.array[i];
-//     // tmp1.nxt = tmp2.nxt;
-//     tmp1.num += tmp2.num;
-//     strcpy(tmp1.end, tmp2.end);
-
-//     tmp2.if_occupied = false;
-
-//     // note: split if exceed the thershold
-//     ffile.seekp(sizeof(int) + index2 * sizeof(UllBlock));
-//     ffile.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
-//     if (tmp1.num > BLOCK_SPLIT_THRESHOLD)
-//         splitBlock(tmp1, index1);
-//     else {
-//         // write
-//         block_num--;
-//         ffile.seekp(0);
-//         ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
-//         ffile.seekp(sizeof(int) + index1 * sizeof(UllBlock));
-//         ffile.write(reinterpret_cast<char *>(&tmp1), sizeof(UllBlock));
-//     }
-// }
-
 void Ull::show() {
     ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     int block_num;
@@ -273,7 +222,7 @@ void Ull::show() {
     for (int i = 1; i <= block_num; i++) {
         UllBlock tmp;
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        cout << "block" << i << " if occupied " << tmp.if_occupied << " ";
+        cout << "block" << i << " ";
         for (int i = 0; i < tmp.num; i++) cout << tmp.array[i].index << " ";
         cout << endl;
     }
