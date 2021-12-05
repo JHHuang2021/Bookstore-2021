@@ -64,15 +64,16 @@ void Ull::addNode(const UllNode &book) {
     if (index == block_num) index--;
     for (i = 0; i < tmp.num; i++)  // find the position in the block
         if (strcmp(book.str, tmp.array[i].str) == -1) break;
-    // operations that might make the program slower
-    strcpy(tmp.start, tmp.array[0].str);
-    strcpy(tmp.end, tmp.array[tmp.num - 1].str);
 
     // update the bound
     for (int j = tmp.num - 1; j >= i; j--)
         tmp.array[j + 1] = tmp.array[j];  // move and copy
     tmp.array[i] = book;
     tmp.num++;
+    
+    // operations that might make the program slower
+    strcpy(tmp.start, tmp.array[0].str);
+    strcpy(tmp.end, tmp.array[tmp.num - 1].str);
     if (tmp.num <= BLOCK_SPLIT_THRESHOLD) {
         ffile.seekp(sizeof(int) + index * sizeof(UllBlock));
         ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
