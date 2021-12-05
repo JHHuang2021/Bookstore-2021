@@ -1,8 +1,10 @@
 #include "unrolled_linklist.hpp"
 
 // #include <cstdint>
+#include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <ostream>
 
 UllNode::UllNode(const string &isbn, const int &index) {
     strcpy(str, isbn.c_str());
@@ -31,23 +33,33 @@ UllBlock &UllBlock::operator=(const UllBlock &rhs) {
 
 Ull::Ull(const string &file_name, const string &file_free)
     : file_name(file_name), fio_name(file_free) {
-    ffile.open(file_name, fstream::out);
-    ffile.close();
-    int block_num = 1;
-    UllBlock tmp;
-    ffile.open(file_name, fstream::in | fstream::binary | fstream::out);
-    ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
-    ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-    ffile.close();
+    ifstream in_1(file_name, ifstream::in);
 
-    file_spare.open(file_free, fstream::out);
-    file_spare.close();
-    memset(spare_block_index, -1, sizeof(spare_block_index));
-    spare_block_index[0] = 0;
-    file_spare.open(file_free, fstream::in | fstream::binary | fstream::out);
-    file_spare.write(reinterpret_cast<char *>(spare_block_index),
-                     sizeof(spare_block_index));
-    file_spare.close();
+    if (!in_1) {
+        // ffile.open(file_name, fstream::out);
+        // ffile.close();
+        ofstream out(file_name, ofstream::out);
+        int block_num = 1;
+        UllBlock tmp;
+        ffile.open(file_name, fstream::in | fstream::binary | fstream::out);
+        ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
+        ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
+        ffile.close();
+    }
+
+    ifstream in_2(file_free, ifstream::in);
+    if (!in_2) {
+        ofstream out_(file_free, ofstream::out);
+        // file_spare.open(file_free, fstream::out);
+        // file_spare.close();
+        memset(spare_block_index, -1, sizeof(spare_block_index));
+        spare_block_index[0] = 0;
+        file_spare.open(file_free,
+                        fstream::in | fstream::binary | fstream::out);
+        file_spare.write(reinterpret_cast<char *>(spare_block_index),
+                         sizeof(spare_block_index));
+        file_spare.close();
+    }
 }
 
 void Ull::addNode(const UllNode &book) {
@@ -57,6 +69,19 @@ void Ull::addNode(const UllNode &book) {
     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
     UllBlock tmp;
     int i = 0, index = 0;
+
+    for (index = 0; index < block_num; index++) {
+        ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
+        if (strcmp(tmp.end, book.str) >= 0) {
+            for (int i = 0; i < tmp.num; i++)
+                if (tmp.array[i] == book) {
+                    ffile.close();
+                    return;
+                }
+        }
+    }
+    ffile.seekg(sizeof(int));
+
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(book.str, tmp.end) <= 0) break;
@@ -70,7 +95,7 @@ void Ull::addNode(const UllNode &book) {
         tmp.array[j + 1] = tmp.array[j];  // move and copy
     tmp.array[i] = book;
     tmp.num++;
-    
+
     // operations that might make the program slower
     strcpy(tmp.start, tmp.array[0].str);
     strcpy(tmp.end, tmp.array[tmp.num - 1].str);
