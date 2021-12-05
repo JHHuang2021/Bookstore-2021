@@ -3,9 +3,9 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-#define BLOCK_SIZE 200
-#define BLOCK_SPLIT_THRESHOLD 170
-#define BLOCK_SPLIT_LEFT 85
+#define BLOCK_SIZE 500
+#define BLOCK_SPLIT_THRESHOLD 400
+#define BLOCK_SPLIT_LEFT 200
 #define BLOCK_MERGE_THRESHOLD 20
 
 class UllNode {
@@ -48,8 +48,8 @@ class Ull {
 
     inline void delBlock(const int &index);
 
-    void mergeBlock(UllBlock &tmp1, UllBlock &tmp2, const int &index1,
-                    const int &index2);
+    // void mergeBlock(UllBlock &tmp1, UllBlock &tmp2, const int &index1,
+                    // const int &index2);
 
     void splitBlock(UllBlock &obj, const int &index);
 

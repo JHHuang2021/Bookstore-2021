@@ -27,14 +27,15 @@ int main() {
 
     // Save current time(hhmmss as integer) to file
     // set<int> array;
-    // for (int i = 1; i <= 1000; i++) {
+    // for (int i = 1; i <= 1; i++) {
     //     testUll.addNode(UllNode("CppPrimer", i));
     // }
-    // testUll.show();
-    // for (int i = 1; i <= 1000; i++) {
+    // testUll.findNode("CppPrimer", array);
+    // // testUll.show();
+    // for (int i = 1; i <= 1; i++) {
     //     testUll.deleteNode(UllNode("CppPrimer", i));
-        
     // }
+    // testUll.deleteNode(UllNode("CppPrimer1", 1));
 
     // for (int i = 1; i <= 150; i++) {
     //     testUll.deleteNode(UllNode("CppPrimer", i));
@@ -78,7 +79,7 @@ int main() {
                     cout << *find.begin() << " ";
                     find.erase(find.begin());
                 }
-                cout << endl;
+                cout << '\n';
             }
         }
         if (str == "delete") {

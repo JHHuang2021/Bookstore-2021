@@ -209,6 +209,7 @@ void Ull::deleteNode(const UllNode &node) {
             strcpy(tmp.start, tmp.array[0].str);
             strcpy(tmp.end, tmp.array[tmp.num - 1].str);
             // if (tmp.num > BLOCK_MERGE_THRESHOLD || block_num == 1) {
+            if (tmp.num == 0) tmp.if_occupied = false;
             ffile.seekp(sizeof(int) + index * sizeof(UllBlock));
             ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
             ffile.close();
@@ -219,45 +220,46 @@ void Ull::deleteNode(const UllNode &node) {
 }
 
 // types of args can be modified if the program is too slow
-void Ull::mergeBlock(UllBlock &tmp1, UllBlock &tmp2, const int &index1,
-                     const int &index2) {
-    // index1 <- index2
-    int block_num, put_index = 0;
-    ffile.seekg(0);
-    ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
-    file_spare.open(fio_name, fstream::in | fstream::out | fstream::binary);
-    file_spare.seekg(0);
-    file_spare.read(reinterpret_cast<char *>(spare_block_index),
-                    sizeof(spare_block_index));
-    spare_block_index[0]++;
-    spare_block_index[spare_block_index[0]] = index2;
+// void Ull::mergeBlock(UllBlock &tmp1, UllBlock &tmp2, const int &index1,
+//                      const int &index2) {
+//     // index1 <- index2
+//     int block_num, put_index = 0;
+//     ffile.seekg(0);
+//     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
+//     file_spare.open(fio_name, fstream::in | fstream::out | fstream::binary);
+//     file_spare.seekg(0);
+//     file_spare.read(reinterpret_cast<char *>(spare_block_index),
+//                     sizeof(spare_block_index));
+//     spare_block_index[0]++;
+//     spare_block_index[spare_block_index[0]] = index2;
 
-    file_spare.seekp(0);
-    file_spare.write(reinterpret_cast<char *>(spare_block_index),
-                     sizeof(spare_block_index));
-    file_spare.close();
-    // copy
-    for (int i = 0; i < tmp2.num; i++) tmp1.array[tmp1.num + i] = tmp2.array[i];
-    // tmp1.nxt = tmp2.nxt;
-    tmp1.num += tmp2.num;
-    strcpy(tmp1.end, tmp2.end);
+//     file_spare.seekp(0);
+//     file_spare.write(reinterpret_cast<char *>(spare_block_index),
+//                      sizeof(spare_block_index));
+//     file_spare.close();
+//     // copy
+//     for (int i = 0; i < tmp2.num; i++) tmp1.array[tmp1.num + i] =
+//     tmp2.array[i];
+//     // tmp1.nxt = tmp2.nxt;
+//     tmp1.num += tmp2.num;
+//     strcpy(tmp1.end, tmp2.end);
 
-    tmp2.if_occupied = false;
+//     tmp2.if_occupied = false;
 
-    // note: split if exceed the thershold
-    ffile.seekp(sizeof(int) + index2 * sizeof(UllBlock));
-    ffile.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
-    if (tmp1.num > BLOCK_SPLIT_THRESHOLD)
-        splitBlock(tmp1, index1);
-    else {
-        // write
-        block_num--;
-        ffile.seekp(0);
-        ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
-        ffile.seekp(sizeof(int) + index1 * sizeof(UllBlock));
-        ffile.write(reinterpret_cast<char *>(&tmp1), sizeof(UllBlock));
-    }
-}
+//     // note: split if exceed the thershold
+//     ffile.seekp(sizeof(int) + index2 * sizeof(UllBlock));
+//     ffile.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
+//     if (tmp1.num > BLOCK_SPLIT_THRESHOLD)
+//         splitBlock(tmp1, index1);
+//     else {
+//         // write
+//         block_num--;
+//         ffile.seekp(0);
+//         ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
+//         ffile.seekp(sizeof(int) + index1 * sizeof(UllBlock));
+//         ffile.write(reinterpret_cast<char *>(&tmp1), sizeof(UllBlock));
+//     }
+// }
 
 void Ull::show() {
     ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
