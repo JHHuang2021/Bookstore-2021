@@ -1,10 +1,15 @@
-#include <iostream>
+#include <bits/stdc++.h>
 
-#include <ctime>
+#include <cstdio>
+#include <cstdlib>
+#include <sstream>
+#include <string>
 
-#include "ull.h"
+#include "unrolled_linklist.hpp"
 
 int main() {
+    // freopen("test.in", "r", stdin);
+    // freopen("test.out", "w", stdout);
     // ! Notice
     // If you are using dynamic-link library, the DLL
     // file (filename extension is `.so` in Linux and
@@ -18,20 +23,57 @@ int main() {
     // any other file.
 
     // Initialize ULL with file name
-    Ull testUll("test.dat");
+    Ull testUll("test.dat", "test_free.dat");
 
     // Save current time(hhmmss as integer) to file
-    auto tt = time(nullptr);
-    auto currentTime = localtime(&tt);
-    testUll.addNode(UllNode(currentTime->tm_hour * 10000
-                            + currentTime->tm_min * 100
-                            + currentTime->tm_sec,
-                            "Bello ACM!"));
+    // vector<int> array;
+    // for (int i = 1; i <= 200; i++) testUll.addNode(UllNode("CppPrimer", i));
 
+    // for (int i = 1; i <= 150; i++) {
+    //     testUll.deleteNode(UllNode("CppPrimer", i));
+    // }
+
+    // for (int i = 201; i <= 400; i++) testUll.addNode(UllNode("CppPrimer", i));
+    // testUll.findNode("book_name20", array);
+    // cout << array.front() << endl;
     // Print all entries in file.
-    std::vector<int> retVec;
-    testUll.findNode("Bello ACM!", retVec);
-    for (auto item:retVec) std::cout << item << std::endl;
+    // std::vector<int> retVec;
+    // testUll.findNode("Bello ACM!", retVec);
+    // for (auto item : retVec) std::cout << item << std::endl;
 
+    int n;
+    cin >> n;
+    getchar();
+    for (int i = 1; i <= n; i++) {
+        string str;
+        getline(cin, str);
+        istringstream in(str);
+        in >> str;
+        if (str == "insert") {
+            string str1, str2;
+            in >> str1 >> str2;
+            testUll.addNode(UllNode(str1, atoi(str2.c_str())));
+        }
+        if (str == "find") {
+            string str1;
+            set<int> find;
+            in >> str1;
+            testUll.findNode(str1, find);
+            if (find.empty())
+                cout << "null" << endl;
+            else {
+                while (!find.empty()) {
+                    cout << *find.begin() << " ";
+                    find.erase(find.begin());
+                }
+                cout << endl;
+            }
+        }
+        if (str == "delete") {
+            string str1, str2;
+            in >> str1 >> str2;
+            testUll.deleteNode(UllNode(str1, atoi(str2.c_str())));
+        }
+    }
     return 0;
 }
