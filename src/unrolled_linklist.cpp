@@ -5,6 +5,7 @@
 #include <cstring>
 #include <fstream>
 #include <ostream>
+#define int long long
 
 UllNode::UllNode(const string &isbn, const int &index) {
     strcpy(str, isbn.c_str());

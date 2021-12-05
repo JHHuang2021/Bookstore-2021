@@ -6,7 +6,8 @@ using namespace std;
 #define BLOCK_SIZE 500
 #define BLOCK_SPLIT_THRESHOLD 400
 #define BLOCK_SPLIT_LEFT 200
-#define BLOCK_MERGE_THRESHOLD 20
+#define int long long
+// #define BLOCK_MERGE_THRESHOLD 20
 
 class UllNode {
    public:
