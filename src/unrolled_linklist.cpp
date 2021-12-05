@@ -206,10 +206,12 @@ void Ull::deleteNode(const UllNode &node) {
             for (int j = i + 1; j < tmp.num; j++)  //
                 tmp.array[j - 1] = tmp.array[j];
             tmp.num--;
+            strcpy(tmp.array[i].str, "");
+            tmp.array[i].index = 0;
             strcpy(tmp.start, tmp.array[0].str);
             strcpy(tmp.end, tmp.array[tmp.num - 1].str);
             // if (tmp.num > BLOCK_MERGE_THRESHOLD || block_num == 1) {
-            if (tmp.num == 0) tmp.if_occupied = false;
+            if (tmp.num == 0 && block_num != 1) tmp.if_occupied = false;
             ffile.seekp(sizeof(int) + index * sizeof(UllBlock));
             ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
             ffile.close();
