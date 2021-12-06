@@ -4,8 +4,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define BLOCK_SIZE 600
-#define BLOCK_SPLIT_THRESHOLD 560
-#define BLOCK_SPLIT_LEFT 280
+#define BLOCK_SPLIT_THRESHOLD 580
+#define BLOCK_SPLIT_LEFT 290
 // #define BLOCK_MERGE_THRESHOLD 20
 
 class UllNode {

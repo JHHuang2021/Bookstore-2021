@@ -22,12 +22,27 @@ int main() {
     // any other file.
     // set<int> array;
     Ull testUll("test.dat", "test_free.dat");
-    // for (int i = 1; i <= 800; i++)
-    //     testUll.addNode(UllNode("test" + to_string(i), i));
-    // for (int i = 1; i <= 600; i++)
-    //     testUll.deleteNode(UllNode("test" + to_string(i), i));
-    // testUll.show();
-    // testUll.findNode("test1", array);
+    // testUll.addNode(UllNode("test" + to_string(0), 1));
+    // testUll.addNode(UllNode("test" + to_string(1), 1));
+    // for (int i = 0; i <= 300; i++)
+    //     testUll.addNode(UllNode("test" + to_string(300-i), i));
+    // testUll.findNode("test0", array);
+    // while (!array.empty()) {
+    //     cout << *array.begin() << endl;
+    //     array.erase(array.begin());
+    // }
+    // cout << endl;
+    // for (int i = 0; i <= 300; i++)
+    //     testUll.deleteNode(UllNode("test" + to_string(i), 300 - i));
+    // testUll.findNode("test0", array);
+    // while (!array.empty()) {
+    //     cout << *array.begin() << endl;
+    //     array.erase(array.begin());
+    // }
+    // cout << endl;
+    // for (int i = 0; i <= 300; i++)
+    //     testUll.deleteNode(UllNode("test" + to_string(0), i));
+    // testUll.findNode("test0", array);
     // while (!array.empty()) {
     //     cout << *array.begin() << endl;
     //     array.erase(array.begin());
@@ -65,7 +80,6 @@ int main() {
             in >> str1 >> str2;
             testUll.deleteNode(UllNode(str1, atoi(str2.c_str())));
         }
-
     }
     return 0;
 }
