@@ -163,7 +163,6 @@ void Ull::findNode(const string &key, set<int> &tp) {
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             for (int i = 0; i < tmp.num; i++)
                 if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
-                    if (tmp.array[i].index == 0) continue;
                     tp.insert(tmp.array[i].index);
                 }
         }
