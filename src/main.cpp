@@ -72,8 +72,8 @@ int main() {
             find.clear();
             in >> str1;
             testUll.findNode(str1, find);
-            if (!find.empty() && *find.begin() == 0) find.erase(find.begin());
-            // auto iter = find.find(0);
+            // if (!find.empty() && *find.begin() == 0) find.erase(find.begin());
+            // auto iter = find.find(0);s
             // if (iter != find.end()) find.erase(iter);
             if (find.empty())
                 cout << "null" << endl;
