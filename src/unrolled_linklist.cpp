@@ -1,5 +1,6 @@
 #include "unrolled_linklist.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -8,7 +9,12 @@ UllNode::UllNode(const string &isbn, const int &index) {
     strcpy(str, isbn.c_str());
     this->index = index;
 }
-
+bool UllNode::cmp(const UllNode &lhs, const UllNode &rhs) {
+    if (strcmp(lhs.str, rhs.str) < 0)
+        return true;
+    else
+        return false;
+}
 bool UllNode::operator==(const UllNode &obj) const {
     if (strcmp(this->str, obj.str) == 0 && this->index == obj.index)
         return true;
@@ -87,10 +93,13 @@ void Ull::addNode(const UllNode &book) {
     if (index == block_num) index--;
     //  i = tmp.binary_search(book.str) + 1;
     // if (tmp.array[0].str[0] == 0) i = 0;
-    for (i = 0; i < tmp.num; i++)  // find the position in the block
-    {
-        if (strcmp(book.str, tmp.array[i].str) < 0) break;
-    }
+    auto binary_find =
+        upper_bound(tmp.array, tmp.array + tmp.num, book, UllNode::cmp);
+    i = binary_find - tmp.array;
+    // for (i = 0; i < tmp.num; i++)  // find the position in the block
+    // {
+    //     if (strcmp(book.str, tmp.array[i].str) < 0) break;  // the first >
+    // }
 
     // update the bound
     for (int j = tmp.num - 1; j >= i; j--)
@@ -168,7 +177,7 @@ void Ull::findNode(const string &key, set<int> &tp) {
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             // int indexx = tmp.binary_search(key) + 1;
             // if (strcmp(tmp.array[0].str, key.c_str()) == 0) indexx = 0;
-            
+
             for (int i = 0; i < tmp.num; i++)
                 if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
                     tp.insert(tmp.array[i].index);
@@ -236,7 +245,7 @@ int UllBlock::binary_search(const string &search) {
     while (l < r) {
         int mid = (l + r + 1) >> 1;
         if (strcmp(search.c_str(), this->array[mid].str) > 0)
-            l = mid+1;
+            l = mid + 1;
         else
             r = mid;
     }

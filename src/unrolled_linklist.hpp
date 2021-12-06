@@ -3,9 +3,9 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-#define BLOCK_SIZE 300
-#define BLOCK_SPLIT_THRESHOLD 280
-#define BLOCK_SPLIT_LEFT 140
+#define BLOCK_SIZE 600
+#define BLOCK_SPLIT_THRESHOLD 580
+#define BLOCK_SPLIT_LEFT 290
 // #define BLOCK_MERGE_THRESHOLD 20
 
 class UllNode {
@@ -20,6 +20,8 @@ class UllNode {
     UllNode(const string &isbn, const int &index);
 
     UllNode &operator=(const UllNode &rhs);
+
+    static bool cmp(const UllNode &lhs, const UllNode &rhs);
 };
 
 class UllBlock {  // 0-base
