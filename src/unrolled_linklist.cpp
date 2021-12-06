@@ -173,7 +173,8 @@ void Ull::findNode(const string &key, set<int> &array) {
                 // to be modified
                 {
                     // cout << i << endl;
-                    if (tmp.array[i].index) array.insert(tmp.array[i].index);
+                    // if (tmp.array[i].index)
+                     array.insert(tmp.array[i].index);
                 }
         }
     }
