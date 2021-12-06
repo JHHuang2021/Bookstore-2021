@@ -21,38 +21,7 @@ int main() {
     // in Windows), the executable file can run without
     // any other file.
 
-    // Initialize ULL with file name
     Ull testUll("test.dat", "test_free.dat");
-
-    // Save current time(hhmmss as integer) to file
-    // set<int> array;
-    // for (int i = 1; i <= 1; i++) {
-    //     testUll.addNode(UllNode("CppPrimer", i));
-    // }
-    // testUll.findNode("CppPrimer", array);
-    // // testUll.show();
-    // for (int i = 1; i <= 1; i++) {
-    //     testUll.deleteNode(UllNode("CppPrimer", i));
-    // }
-    // testUll.deleteNode(UllNode("CppPrimer1", 1));
-
-    // for (int i = 1; i <= 150; i++) {
-    //     testUll.deleteNode(UllNode("CppPrimer", i));
-    // }
-
-    // for (int i = 201; i <= 400; i++) testUll.addNode(UllNode("CppPrimer",
-    // i));
-    // testUll.findNode("CppPrimer", array);
-    // while (!array.empty()) {
-    //     cout << *array.begin() << " ";
-    //     array.erase(array.begin());
-    // }
-    // cout << endl;
-    // Print all entries in file.
-    // std::vector<int> retVec;
-    // testUll.findNode("Bello ACM!", retVec);
-    // for (auto item : retVec) std::cout << item << std::endl;
-
     int n;
     cin >> n;
     getchar();
@@ -76,17 +45,18 @@ int main() {
             // find.erase(find.begin()); auto iter = find.find(0); if (iter !=
             // find.end()) find.erase(iter);
             if (tmp.empty())
-                cout << "null" << '\n';
-            else {
-                if (tmp.size() == 1 && *tmp.begin() == 0)
-                    cout << "null";
-                else
-                    while (!tmp.empty()) {
-                        if (*tmp.begin()) cout << *tmp.begin() << " ";
-                        tmp.erase(tmp.begin());
-                    }
-                cout << '\n';
-            }
+                cout << "null";
+            else
+                //  {
+                //     if (tmp.size() == 1 && *tmp.begin() == 0)
+                //         cout << "null";
+                //     else
+                while (!tmp.empty()) {
+                    cout << *tmp.begin() << " ";
+                    tmp.erase(tmp.begin());
+                }
+            cout << '\n';
+            // }
         }
         if (str == "delete") {
             string str1, str2;

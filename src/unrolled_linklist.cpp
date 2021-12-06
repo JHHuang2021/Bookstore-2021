@@ -161,7 +161,8 @@ void Ull::findNode(const string &key, set<int> &tp) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             for (int i = 0; i < tmp.num; i++)
-                if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
+                if (strcmp(tmp.array[i].str, key.c_str()) == 0 &&
+                    tmp.array[i].index) {
                     // cout << i << endl;
                     // if (tmp.array[i].index)
                     tp.insert(tmp.array[i].index);
