@@ -7,7 +7,7 @@
 
 #include "unrolled_linklist.hpp"
 int main() {
-    // freopen("test.in", "r", stdin);
+    freopen("test.in", "r", stdin);
     // freopen("test.out", "w", stdout);
     // ! Notice
     // If you are using dynamic-link library, the DLL
@@ -72,7 +72,7 @@ int main() {
             find.clear();
             in >> str1;
             testUll.findNode(str1, find);
-            if (*find.begin() == 0) find.erase(find.begin());
+            if (!find.empty() && *find.begin() == 0) find.erase(find.begin());
             // auto iter = find.find(0);
             // if (iter != find.end()) find.erase(iter);
             if (find.empty())
