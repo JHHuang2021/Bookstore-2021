@@ -6,8 +6,7 @@
 #include <string>
 
 #include "unrolled_linklist.hpp"
-#define int long long
-signed main() {
+int main() {
     // freopen("test.in", "r", stdin);
     // freopen("test.out", "w", stdout);
     // ! Notice
@@ -65,11 +64,12 @@ signed main() {
         if (str == "insert") {
             string str1, str2;
             in >> str1 >> str2;
-            testUll.addNode(UllNode(str1, atoll(str2.c_str())));
+            testUll.addNode(UllNode(str1, atoi(str2.c_str())));
         }
         if (str == "find") {
             string str1;
             set<int> find;
+            find.clear();
             in >> str1;
             testUll.findNode(str1, find);
             if (find.empty())
@@ -85,7 +85,7 @@ signed main() {
         if (str == "delete") {
             string str1, str2;
             in >> str1 >> str2;
-            testUll.deleteNode(UllNode(str1, atoll(str2.c_str())));
+            testUll.deleteNode(UllNode(str1, atoi(str2.c_str())));
         }
     }
     return 0;

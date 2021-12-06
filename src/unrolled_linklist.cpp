@@ -5,8 +5,6 @@
 #include <cstring>
 #include <fstream>
 #include <ostream>
-#define int long long
-
 UllNode::UllNode(const string &isbn, const int &index) {
     strcpy(str, isbn.c_str());
     this->index = index;
@@ -175,7 +173,7 @@ void Ull::findNode(const string &key, set<int> &array) {
                 // to be modified
                 {
                     // cout << i << endl;
-                    array.insert(tmp.array[i].index);
+                    if (tmp.array[i].index) array.insert(tmp.array[i].index);
                 }
         }
     }
@@ -202,6 +200,8 @@ void Ull::deleteNode(const UllNode &node) {
 
             for (int j = i + 1; j < tmp.num; j++)  //
                 tmp.array[j - 1] = tmp.array[j];
+            tmp.array[tmp.num - 1].index = 0;
+            strcpy(tmp.array[tmp.num - 1].str, "");
             tmp.num--;
 
             strcpy(tmp.start, tmp.array[0].str);
