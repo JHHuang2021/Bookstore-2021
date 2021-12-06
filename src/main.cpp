@@ -41,22 +41,14 @@ int main() {
             tmp.clear();
             in >> str1;
             testUll.findNode(str1, tmp);
-            // if (!find.empty() && *find.begin() == 0)
-            // find.erase(find.begin()); auto iter = find.find(0); if (iter !=
-            // find.end()) find.erase(iter);
             if (tmp.empty())
                 cout << "null";
             else
-                //  {
-                //     if (tmp.size() == 1 && *tmp.begin() == 0)
-                //         cout << "null";
-                //     else
                 while (!tmp.empty()) {
                     cout << *tmp.begin() << " ";
                     tmp.erase(tmp.begin());
                 }
             cout << '\n';
-            // }
         }
         if (str == "delete") {
             string str1, str2;

@@ -150,6 +150,7 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
 
 void Ull::findNode(const string &key, set<int> &tp) {
     int block_num;
+    tp.clear();
     ffile.close();
     ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     ffile.seekg(0);
@@ -162,9 +163,7 @@ void Ull::findNode(const string &key, set<int> &tp) {
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             for (int i = 0; i < tmp.num; i++)
                 if (strcmp(tmp.array[i].str, key.c_str()) == 0 &&
-                    tmp.array[i].index) {
-                    // cout << i << endl;
-                    // if (tmp.array[i].index)
+                    tmp.array[i].index!=0) {
                     tp.insert(tmp.array[i].index);
                 }
         }
