@@ -82,7 +82,7 @@ int main() {
                     cout << "null";
                 else
                     while (!tmp.empty()) {
-                        cout << *tmp.begin() << " ";
+                        if (*tmp.begin()) cout << *tmp.begin() << " ";
                         tmp.erase(tmp.begin());
                     }
                 cout << '\n';
