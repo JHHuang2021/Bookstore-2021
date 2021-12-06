@@ -63,6 +63,7 @@ Ull::Ull(const string &file_name, const string &file_free)
 
 void Ull::addNode(const UllNode &book) {
     int block_num;
+    ffile.close();
     ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
@@ -147,34 +148,23 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
     ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
 }
 
-void Ull::findNode(const string &key, set<int> &array) {
+void Ull::findNode(const string &key, set<int> &tp) {
     int block_num;
+    ffile.close();
     ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
     UllBlock tmp;
     int index = 0;
 
-    /* only for test*/
-    // for (index = 0; index < block_num; index++) {
-    //     ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-    //     cout << "block_index"
-    //          << " " << index << endl;
-    //     for (int i = 0; i < tmp.num; i++)
-    //         cout << tmp.array[i].str << " " << tmp.array[i].index << endl;
-    // }
-    // ffile.seekg(sizeof(int));
-
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             for (int i = 0; i < tmp.num; i++)
-                if (strcmp(tmp.array[i].str, key.c_str()) == 0)
-                // to be modified
-                {
+                if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
                     // cout << i << endl;
                     // if (tmp.array[i].index)
-                     array.insert(tmp.array[i].index);
+                    tp.insert(tmp.array[i].index);
                 }
         }
     }

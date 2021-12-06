@@ -68,20 +68,23 @@ int main() {
         }
         if (str == "find") {
             string str1;
-            set<int> find;
-            find.clear();
+            set<int> tmp;
+            tmp.clear();
             in >> str1;
-            testUll.findNode(str1, find);
-            // if (!find.empty() && *find.begin() == 0) find.erase(find.begin());
-            // auto iter = find.find(0);s
-            // if (iter != find.end()) find.erase(iter);
-            if (find.empty())
-                cout << "null" << endl;
+            testUll.findNode(str1, tmp);
+            // if (!find.empty() && *find.begin() == 0)
+            // find.erase(find.begin()); auto iter = find.find(0); if (iter !=
+            // find.end()) find.erase(iter);
+            if (tmp.empty())
+                cout << "null" << '\n';
             else {
-                while (!find.empty()) {
-                    cout << *find.begin() << " ";
-                    find.erase(find.begin());
-                }
+                if (tmp.size() == 1 && *tmp.begin() == 0)
+                    cout << "null";
+                else
+                    while (!tmp.empty()) {
+                        cout << *tmp.begin() << " ";
+                        tmp.erase(tmp.begin());
+                    }
                 cout << '\n';
             }
         }
