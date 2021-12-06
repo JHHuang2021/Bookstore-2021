@@ -20,8 +20,18 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-
+    // set<int> array;
     Ull testUll("test.dat", "test_free.dat");
+    // for (int i = 1; i <= 800; i++)
+    //     testUll.addNode(UllNode("test" + to_string(i), i));
+    // for (int i = 1; i <= 600; i++)
+    //     testUll.deleteNode(UllNode("test" + to_string(i), i));
+    // testUll.show();
+    // testUll.findNode("test1", array);
+    // while (!array.empty()) {
+    //     cout << *array.begin() << endl;
+    //     array.erase(array.begin());
+    // }
     int n;
     cin >> n;
     getchar();
@@ -55,7 +65,6 @@ int main() {
             in >> str1 >> str2;
             testUll.deleteNode(UllNode(str1, atoi(str2.c_str())));
         }
-        // testUll.show();
     }
     return 0;
 }

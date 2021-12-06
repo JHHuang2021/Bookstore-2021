@@ -3,9 +3,9 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-#define BLOCK_SIZE 600
-#define BLOCK_SPLIT_THRESHOLD 560
-#define BLOCK_SPLIT_LEFT 280
+#define BLOCK_SIZE 300
+#define BLOCK_SPLIT_THRESHOLD 280
+#define BLOCK_SPLIT_LEFT 140
 // #define BLOCK_MERGE_THRESHOLD 20
 
 class UllNode {
@@ -35,7 +35,7 @@ class UllBlock {  // 0-base
     UllBlock(){};
 
     UllBlock &operator=(const UllBlock &rhs);
-    
+
     int binary_search(const string &search);
 };
 

@@ -86,10 +86,12 @@ void Ull::addNode(const UllNode &book) {
         if (strcmp(book.str, tmp.end) <= 0) break;
     }
     if (index == block_num) index--;
-    for (i = 0; i < tmp.num; i++)  // find the position in the block
-    {
-        if (strcmp(book.str, tmp.array[i].str) < 0) break;
-    }
+    i = tmp.binary_search(book.str);
+    if (strcmp(book.str, tmp.array[i].str) > 0) i++;
+    // for (i = 0; i < tmp.num; i++)  // find the position in the block
+    // {
+    //     if (strcmp(book.str, tmp.array[i].str) < 0) break;
+    // }
 
     // update the bound
     for (int j = tmp.num - 1; j >= i; j--)
@@ -187,16 +189,12 @@ void Ull::deleteNode(const UllNode &node) {
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str, tmp.end) <= 0) {
-            int indexx = tmp.binary_search(node.str), flag = 0;
+            int indexx = tmp.binary_search(node.str);
             for (i = indexx; i < tmp.num; i++) {
                 // find the position in the block
-                if (node.index == tmp.array[i].index) break;
-                if (strcmp(node.str, tmp.array[i].str) != 0) {
-                    flag = 1;
-                    break;
-                }
+                if (node == tmp.array[i]) break;
             }
-            if (i == tmp.num || flag) continue;
+            if (i == tmp.num) continue;
 
             strcpy(tmp.array[i].str, "");
             tmp.array[i].index = 0;
