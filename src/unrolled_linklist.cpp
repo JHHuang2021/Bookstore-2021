@@ -1,5 +1,6 @@
 #include "unrolled_linklist.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -140,6 +141,8 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
     strcpy(obj.end, obj.array[obj.num - 1].str);
     strcpy(tmp.start, tmp.array[0].str);
     strcpy(tmp.end, tmp.array[tmp.num - 1].str);
+    tmp.nxt = obj.nxt;
+    obj.nxt = put_index;
     // obj.nxt = put_index;
     ffile.seekp(0);
     ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
@@ -162,10 +165,12 @@ void Ull::findNode(const string &key, set<int> &tp) {
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, key.c_str()) >= 0) {
-            for (int i = 0; i < tmp.num; i++)
+            int index = tmp.binary_search(key);
+            for (int i = index; i < tmp.num; i++)
                 if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
                     tp.insert(tmp.array[i].index);
-                }
+                } else
+                    break;
         }
     }
     ffile.close();
@@ -182,9 +187,16 @@ void Ull::deleteNode(const UllNode &node) {
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str, tmp.end) <= 0) {
-            for (i = 0; i < tmp.num; i++)  // find the position in the block
-                if (node == tmp.array[i]) break;
-            if (i == tmp.num) continue;
+            int indexx = tmp.binary_search(node.str), flag = 0;
+            for (i = indexx; i < tmp.num; i++) {
+                // find the position in the block
+                if (node.index == tmp.array[i].index) break;
+                if (strcmp(node.str, tmp.array[i].str) != 0) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (i == tmp.num || flag) continue;
 
             strcpy(tmp.array[i].str, "");
             tmp.array[i].index = 0;
@@ -219,4 +231,16 @@ void Ull::show() {
         cout << endl;
     }
     ffile.close();
+}
+
+int UllBlock::binary_search(const string &search) {
+    int l = 0, r = this->num - 1;
+    while (l < r) {
+        int mid = (l + r) >> 1;
+        if (strcmp(search.c_str(), this->array[mid].str) <= 0)
+            r = mid;
+        else
+            l = mid + 1;
+    }
+    return l;
 }
