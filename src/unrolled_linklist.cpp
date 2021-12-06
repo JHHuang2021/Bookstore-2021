@@ -1,6 +1,5 @@
 #include "unrolled_linklist.hpp"
 
-// #include <cstdint>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -87,7 +86,9 @@ void Ull::addNode(const UllNode &book) {
     }
     if (index == block_num) index--;
     for (i = 0; i < tmp.num; i++)  // find the position in the block
-        if (strcmp(book.str, tmp.array[i].str) == -1) break;
+    {
+        if (strcmp(book.str, tmp.array[i].str) < 0) break;
+    }
 
     // update the bound
     for (int j = tmp.num - 1; j >= i; j--)
