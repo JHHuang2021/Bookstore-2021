@@ -1,6 +1,5 @@
 #include "unrolled_linklist.hpp"
 
-#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -86,8 +85,7 @@ void Ull::addNode(const UllNode &book) {
         if (strcmp(book.str, tmp.end) <= 0) break;
     }
     if (index == block_num) index--;
-    i = tmp.binary_search(book.str);
-    if (strcmp(book.str, tmp.array[i].str) > 0) i++;
+    i = tmp.binary_search(book.str) + 1;
     // for (i = 0; i < tmp.num; i++)  // find the position in the block
     // {
     //     if (strcmp(book.str, tmp.array[i].str) < 0) break;
@@ -167,12 +165,11 @@ void Ull::findNode(const string &key, set<int> &tp) {
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, key.c_str()) >= 0) {
-            int index = tmp.binary_search(key);
+            int indexx = tmp.binary_search(key) + 1;
             for (int i = index; i < tmp.num; i++)
                 if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
                     tp.insert(tmp.array[i].index);
-                } else
-                    break;
+                }
         }
     }
     ffile.close();
@@ -189,11 +186,10 @@ void Ull::deleteNode(const UllNode &node) {
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str, tmp.end) <= 0) {
-            int indexx = tmp.binary_search(node.str);
-            for (i = indexx; i < tmp.num; i++) {
+            int indexx = tmp.binary_search(node.str) + 1;
+            for (i = indexx; i < tmp.num; i++)
                 // find the position in the block
                 if (node == tmp.array[i]) break;
-            }
             if (i == tmp.num) continue;
 
             strcpy(tmp.array[i].str, "");
@@ -234,11 +230,11 @@ void Ull::show() {
 int UllBlock::binary_search(const string &search) {
     int l = 0, r = this->num - 1;
     while (l < r) {
-        int mid = (l + r) >> 1;
-        if (strcmp(search.c_str(), this->array[mid].str) <= 0)
-            r = mid;
+        int mid = (l + r + 1) >> 1;
+        if (strcmp(search.c_str(), this->array[mid].str) > 0)
+            l = mid;
         else
-            l = mid + 1;
+            r = mid - 1;
     }
     return l;
 }
