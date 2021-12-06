@@ -55,6 +55,7 @@ int main() {
             in >> str1 >> str2;
             testUll.deleteNode(UllNode(str1, atoi(str2.c_str())));
         }
+        // testUll.show();
     }
     return 0;
 }

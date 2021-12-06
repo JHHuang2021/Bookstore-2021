@@ -11,7 +11,7 @@ using namespace std;
 class UllNode {
    public:
     int index = 0;      // value
-    char str[25] = "";  // key
+    char str[65] = "";  // key
 
     bool operator==(const UllNode &obj) const;
 
@@ -28,7 +28,7 @@ class UllBlock {  // 0-base
     // int pre = 0;
     bool if_occupied = false;
     int num = 0;
-    char start[25] = "", end[25] = "";
+    char start[65] = "", end[65] = "";
     UllNode array[BLOCK_SIZE];  // 0-base
 
     UllBlock(){};
