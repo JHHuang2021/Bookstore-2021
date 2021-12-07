@@ -35,13 +35,10 @@ UllBlock &UllBlock::operator=(const UllBlock &rhs) {
     return *this;
 }
 
-Ull::Ull(const string &file_name, const string &file_free)
-    : file_name(file_name), fio_name(file_free) {
+Ull::Ull(const string &file_name) : file_name(file_name) {
     ifstream in_1(file_name, ifstream::in);
 
     if (!in_1) {
-        // ffile.open(file_name, fstream::out);
-        // ffile.close();
         ofstream out(file_name, ofstream::out);
         int block_num = 1;
         UllBlock tmp;
@@ -49,20 +46,6 @@ Ull::Ull(const string &file_name, const string &file_free)
         ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
         ffile.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         ffile.close();
-    }
-
-    ifstream in_2(file_free, ifstream::in);
-    if (!in_2) {
-        ofstream out_(file_free, ofstream::out);
-        // file_spare.open(file_free, fstream::out);
-        // file_spare.close();
-        memset(spare_block_index, -1, sizeof(spare_block_index));
-        spare_block_index[0] = 0;
-        file_spare.open(file_free,
-                        fstream::in | fstream::binary | fstream::out);
-        file_spare.write(reinterpret_cast<char *>(spare_block_index),
-                         sizeof(spare_block_index));
-        file_spare.close();
     }
 }
 
@@ -127,22 +110,7 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
     // ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
-    file_spare.open(fio_name, fstream::in | fstream::out | fstream::binary);
-    file_spare.seekg(0);
-    file_spare.read(reinterpret_cast<char *>(spare_block_index),
-                    sizeof(spare_block_index));
-    if (spare_block_index[0] == 0) {
-        put_index = block_num;
-    } else {
-        put_index = spare_block_index[spare_block_index[0]];
-        spare_block_index[spare_block_index[0]] = -1;
-        spare_block_index[0]--;
-    }
     block_num++;
-    file_spare.seekp(0);
-    file_spare.write(reinterpret_cast<char *>(spare_block_index),
-                     sizeof(spare_block_index));
-    file_spare.close();
     UllBlock tmp;
     for (int i = BLOCK_SPLIT_LEFT; i < obj.num; i++)
         tmp.array[i - BLOCK_SPLIT_LEFT] = obj.array[i];
@@ -153,7 +121,6 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
     strcpy(tmp.end, tmp.array[tmp.num - 1].str);
     tmp.nxt = obj.nxt;
     obj.nxt = put_index;
-    // obj.nxt = put_index;
     ffile.seekp(0);
     ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
     ffile.seekp(sizeof(int) + index * sizeof(UllBlock));
@@ -175,8 +142,6 @@ void Ull::findNode(const string &key, set<int> &tp) {
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, key.c_str()) >= 0) {
-            // int indexx = tmp.binary_search(key) + 1;
-            // if (strcmp(tmp.array[0].str, key.c_str()) == 0) indexx = 0;
             auto binary_find = lower_bound(tmp.array, tmp.array + tmp.num,
                                            UllNode(key, 0), UllNode::cmp);
             int indexx = binary_find - tmp.array;
@@ -201,10 +166,7 @@ void Ull::deleteNode(const UllNode &node) {
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str, tmp.end) <= 0) {
-            // int indexx = tmp.binary_search(node.str) + 1;
-            // if (node == tmp.array[0]) indexx = 0;
             for (i = 0; i < tmp.num; i++)
-                // find the position in the block
                 if (node == tmp.array[i]) break;
             if (i == tmp.num) continue;
 
@@ -241,16 +203,4 @@ void Ull::show() {
         cout << endl;
     }
     ffile.close();
-}
-
-int UllBlock::binary_search(const string &search) {
-    int l = 0, r = this->num - 1;
-    while (l < r) {
-        int mid = (l + r + 1) >> 1;
-        if (strcmp(search.c_str(), this->array[mid].str) > 0)
-            l = mid + 1;
-        else
-            r = mid;
-    }
-    return l;
 }

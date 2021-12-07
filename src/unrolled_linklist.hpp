@@ -37,8 +37,6 @@ class UllBlock {  // 0-base
     UllBlock(){};
 
     UllBlock &operator=(const UllBlock &rhs);
-
-    int binary_search(const string &search);
 };
 
 class Ull {
@@ -53,15 +51,12 @@ class Ull {
 
     inline void delBlock(const int &index);
 
-    // void mergeBlock(UllBlock &tmp1, UllBlock &tmp2, const int &index1,
-    // const int &index2);
-
     void splitBlock(UllBlock &obj, const int &index);
 
    public:
     Ull(){};
 
-    Ull(const string &file_name, const string &file_free);
+    Ull(const string &file_name);
 
     ~Ull(){};
 

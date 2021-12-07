@@ -21,7 +21,7 @@ int main() {
     // in Windows), the executable file can run without
     // any other file.
     // set<int> array;
-    Ull testUll("test.dat", "test_free.dat");
+    Ull testUll("test.dat");
     // testUll.addNode(UllNode("test" + to_string(0), 1));
     // testUll.addNode(UllNode("test" + to_string(1), 1));
     // for (int i = 0; i <= 300; i++)
