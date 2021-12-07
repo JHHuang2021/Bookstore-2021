@@ -78,7 +78,7 @@ void Ull::addNode(const UllNode &book) {
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, book.str) >= 0)
-            for (int i = 0; i < tmp.num; i++)  //
+            for (int i = 0; i < tmp.num; i++)  // binary_search
                 if (tmp.array[i] == book) {
                     ffile.close();
                     return;
@@ -91,17 +91,9 @@ void Ull::addNode(const UllNode &book) {
         if (strcmp(book.str, tmp.end) <= 0) break;
     }
     if (index == block_num) index--;
-    //  i = tmp.binary_search(book.str) + 1;
-    // if (tmp.array[0].str[0] == 0) i = 0;
     auto binary_find =
         lower_bound(tmp.array, tmp.array + tmp.num, book, UllNode::cmp);
     i = binary_find - tmp.array;
-    // for (i = 0; i < tmp.num; i++)  // find the position in the block
-    // {
-    //     if (strcmp(book.str, tmp.array[i].str) < 0)
-    //         break;  // the first tmp > book.str
-    // }
-
     // update the bound
     for (int j = tmp.num - 1; j >= i; j--)
         tmp.array[j + 1] = tmp.array[j];  // move and copy
@@ -178,11 +170,14 @@ void Ull::findNode(const string &key, set<int> &tp) {
         if (strcmp(tmp.end, key.c_str()) >= 0) {
             // int indexx = tmp.binary_search(key) + 1;
             // if (strcmp(tmp.array[0].str, key.c_str()) == 0) indexx = 0;
-
-            for (int i = 0; i < tmp.num; i++)
-                if (strcmp(tmp.array[i].str, key.c_str()) == 0) {
+            auto binary_find = lower_bound(tmp.array, tmp.array + tmp.num,
+                                           UllNode(key, 0), UllNode::cmp);
+            int indexx = binary_find - tmp.array;
+            for (int i = indexx; i < tmp.num; i++)
+                if (strcmp(tmp.array[i].str, key.c_str()) != 0)
+                    break;
+                else
                     tp.insert(tmp.array[i].index);
-                }
         }
     }
     ffile.close();
