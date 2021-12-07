@@ -110,6 +110,7 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
     // ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&block_num), sizeof(int));
+    put_index = block_num;
     block_num++;
     UllBlock tmp;
     for (int i = BLOCK_SPLIT_LEFT; i < obj.num; i++)
@@ -121,6 +122,7 @@ void Ull::splitBlock(UllBlock &obj, const int &index) {  // to be checked
     strcpy(tmp.end, tmp.array[tmp.num - 1].str);
     tmp.nxt = obj.nxt;
     obj.nxt = put_index;
+    // obj.nxt = put_index;
     ffile.seekp(0);
     ffile.write(reinterpret_cast<char *>(&block_num), sizeof(int));
     ffile.seekp(sizeof(int) + index * sizeof(UllBlock));
@@ -142,6 +144,8 @@ void Ull::findNode(const string &key, set<int> &tp) {
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.end, key.c_str()) >= 0) {
+            // int indexx = tmp.binary_search(key) + 1;
+            // if (strcmp(tmp.array[0].str, key.c_str()) == 0) indexx = 0;
             auto binary_find = lower_bound(tmp.array, tmp.array + tmp.num,
                                            UllNode(key, 0), UllNode::cmp);
             int indexx = binary_find - tmp.array;
@@ -166,7 +170,10 @@ void Ull::deleteNode(const UllNode &node) {
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str, tmp.end) <= 0) {
+            // int indexx = tmp.binary_search(node.str) + 1;
+            // if (node == tmp.array[0]) indexx = 0;
             for (i = 0; i < tmp.num; i++)
+                // find the position in the block
                 if (node == tmp.array[i]) break;
             if (i == tmp.num) continue;
 

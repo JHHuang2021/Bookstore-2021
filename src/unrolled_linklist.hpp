@@ -47,7 +47,7 @@ class Ull {
     const string file_name, fio_name;
     fstream ffile, file_spare;  // note that a digit is stored in ffile
 
-    inline int nextBlock(const int &index);
+    // inline int nextBlock(const int &index);
 
     inline void delBlock(const int &index);
 
