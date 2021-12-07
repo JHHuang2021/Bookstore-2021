@@ -77,12 +77,19 @@ void Ull::addNode(const UllNode &book) {
 
     for (index = 0; index < block_num; index++) {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (strcmp(tmp.end, book.str) >= 0)
-            for (int i = 0; i < tmp.num; i++)  // binary_search
-                if (tmp.array[i] == book) {
-                    ffile.close();
-                    return;
-                }
+        if (strcmp(tmp.end, book.str) >= 0) {
+            auto binary_find =
+                lower_bound(tmp.array, tmp.array + tmp.num, book, UllNode::cmp);
+            int indexx = binary_find - tmp.array;
+            for (int i = indexx; i < tmp.num; i++)  // binary_search
+                if (strcmp(tmp.array[i].str, book.str) == 0) {
+                    if (tmp.array[i].index == book.index) {
+                        ffile.close();
+                        return;
+                    }
+                } else
+                    break;
+        }
     }
     ffile.seekg(sizeof(int));
 
@@ -194,18 +201,12 @@ void Ull::deleteNode(const UllNode &node) {
     for (index = 0; index < block_num; index++) {  // find the block
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str, tmp.end) <= 0) {
-            auto binary_find =
-                lower_bound(tmp.array, tmp.array + tmp.num, node, UllNode::cmp);
-            int indexx = binary_find - tmp.array, flag = 0;
-            for (i = indexx; i < tmp.num; i++) {
+            // int indexx = tmp.binary_search(node.str) + 1;
+            // if (node == tmp.array[0]) indexx = 0;
+            for (i = 0; i < tmp.num; i++)
                 // find the position in the block
-                if (strcmp(node.str, tmp.array[i].str) != 0) {
-                    flag = 1;
-                    break;
-                }
-                if (node.index == tmp.array[i].index) break;
-            }
-            if (i == tmp.num||flag) continue;
+                if (node == tmp.array[i]) break;
+            if (i == tmp.num) continue;
 
             strcpy(tmp.array[i].str, "");
             tmp.array[i].index = 0;
