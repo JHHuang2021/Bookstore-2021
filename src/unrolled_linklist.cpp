@@ -94,11 +94,12 @@ void Ull::addNode(const UllNode &book) {
     //  i = tmp.binary_search(book.str) + 1;
     // if (tmp.array[0].str[0] == 0) i = 0;
     auto binary_find =
-        upper_bound(tmp.array, tmp.array + tmp.num, book, UllNode::cmp);
+        lower_bound(tmp.array, tmp.array + tmp.num, book, UllNode::cmp);
     i = binary_find - tmp.array;
     // for (i = 0; i < tmp.num; i++)  // find the position in the block
     // {
-    //     if (strcmp(book.str, tmp.array[i].str) < 0) break;  // the first >
+    //     if (strcmp(book.str, tmp.array[i].str) < 0)
+    //         break;  // the first tmp > book.str
     // }
 
     // update the bound
