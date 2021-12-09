@@ -4,11 +4,11 @@
 using namespace std;
 class TokenScanner {
    public:
-    TokenScanner(){};
+    TokenScanner();
 
     TokenScanner(const string &str);
 
-    virtual ~TokenScanner();
+    ~TokenScanner();
 
     void setInput(const string &str);
 

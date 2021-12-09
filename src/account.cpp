@@ -3,7 +3,11 @@
 #include <cstring>
 
 #include "error.h"
-#include "filemap.h"
+#include "filemap.hpp"
+
+Account::Account() {}
+
+Account::~Account() {}
 
 Account::Account(string &user_id, string &user_name, string &pw, int priority) {
     strcpy(this->user_id_, user_id.c_str());

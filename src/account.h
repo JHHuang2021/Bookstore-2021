@@ -10,7 +10,7 @@ class Account {
     int priority_ = 0;
 
    public:
-    Account(){};
+    Account();
     Account(string &user_id, string &user_name, string &pw, int priority);
     ~Account();
 

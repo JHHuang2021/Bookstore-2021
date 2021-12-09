@@ -4,10 +4,8 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-ifstream in;
-ofstream out;
 
-class book {
+class Book {
    private:
     char ISBN[20];
     char Book_Name[60];
@@ -16,16 +14,16 @@ class book {
     int Quantity = 0;  //库存数量
     double price = 0;  //单价
    public:
-    book();
-    ~book();
+    Book();
+    ~Book();
     void show(const char *);
     void modify(const char *);
     void import(const char *);
 };
 
-void find_book(const book &);
-void insert_book(const book &);
-void modify_book(const book &);
-void delete_book(const book &);
+void find_book(const Book &);
+void insert_book(const Book &);
+void modify_book(const Book &);
+void delete_book(const Book &);
 
 #endif

@@ -14,7 +14,11 @@ set(CMAKE_CXX_STANDARD 20)
 #         # ${PROJECT_SOURCE_DIR}/src/unrolled_linklist.cpp
 #         )
 add_executable(code 
-${PROJECT_SOURCE_DIR}/src/unrolled_linklist.cpp
+${PROJECT_SOURCE_DIR}/src/error.cpp
+${PROJECT_SOURCE_DIR}/src/filemap.cpp
+${PROJECT_SOURCE_DIR}/src/parser.cpp
+${PROJECT_SOURCE_DIR}/src/lib.cpp
+${PROJECT_SOURCE_DIR}/src/account.cpp
 ${PROJECT_SOURCE_DIR}/src/main.cpp)
 # ${src_dir})
 

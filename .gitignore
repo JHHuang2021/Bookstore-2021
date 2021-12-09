@@ -1,3 +1,11 @@
 .idea/
 cmake-build-*/
 test*/
+cmake_install.cmake
+CMakeCache.txt
+code
+Makefile
+.cache/
+.vscode/
+CMakeFiles/
+build/

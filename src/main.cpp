@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
@@ -7,10 +5,12 @@
 #include <string>
 
 #include "account.h"
+#include "error.h"
+#include "filemap.hpp"
 #include "lib.h"
 #include "parser.h"
-#include "unrolled_linklist.h"
-#define mkpr pair<account, book>
+#define mkpr pair<Account, Book>
+
 Ull user_info("user_info"), book_info("book_info");
 
 int main() {

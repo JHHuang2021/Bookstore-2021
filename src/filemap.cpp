@@ -1,4 +1,4 @@
-#include "filemap.h"
+#include "filemap.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -192,57 +192,4 @@ void Ull::DeleteNode(const UllNode &node) {
         }
     }
     ffile_.close();
-}
-
-template <class T>
-MainInfo<T>::MainInfo(string file_name) {
-    this->file_name_ = file_name;
-    ifstream in_1(file_name, ifstream::in);
-
-    if (!in_1) {
-        ofstream out(file_name, ofstream::out);
-        out.close();
-    }
-
-    Ull key_index(file_name + "_ull");
-}
-
-template <class T>
-MainInfo<T>::~MainInfo<T>() {}
-
-template <class T>
-void MainInfo<T>::WriteInfo(T info, string &key) {
-    Ull key_index(file_name_ + "_ull");
-    set<int> find;
-    key_index.FindNode(key, find);
-    if (!find.empty()) throw Error();  // todo
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
-    ffile.seekp(0, ios::end);
-    ffile.write(reinterpret_cast<char *>(&info), sizeof(T));
-
-    int index = (ffile.end - ffile.beg) / sizeof(T) - 1;
-    ffile.close();
-    key_index.AddNode(UllNode(key, index));
-}
-
-template <class T>
-void MainInfo<T>::DeleteInfo(T &info, string &key) {
-    Ull key_index(file_name_ + "_ull");
-    set<int> find;
-    key_index.FindNode(key, find);
-    if (find.empty()) throw Error();  // todo
-    key_index.DeleteNode(UllNode(key, *find.begin()));
-}
-template <class T>
-T MainInfo<T>::FindInfo(string &key) {
-    Ull key_index(file_name_ + "_ull");
-    set<int> find;
-    key_index.FindNode(key, find);
-    if (find.empty()) throw Error();
-    T tmp;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
-    ffile.seekg(*find.begin() * sizeof(T));
-    ffile.read(reinterpret_cast<char *>(&tmp), sizeof(T));
-    ffile.close();
-    return tmp;
 }

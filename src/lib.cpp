@@ -1,45 +1,27 @@
-#include "lib.hpp"
+#include "lib.h"
 
-void lib::show(const char *) {
+Book::Book() {}
 
-}
+Book::~Book() {}
 
-void lib::buy(const char *) {
+void Book::show(const char *) {}
 
-}
+// void Book::buy(const char *) {
 
-void lib::select(const char *) {
+// }
 
-}
+// void Book::select(const char *) {
 
-void lib::modify(const char *) {
+// }
 
-}
+void Book::modify(const char *) {}
 
-void lib::import(const char *) {
+void Book::import(const char *) {}
 
-}
+void find_book(const Book &) {}
 
-lib::lib() {
+void insert_book(const Book &) {}
 
-}
+void modify_book(const Book &) {}
 
-lib::~lib() {
-
-}
-
-void find_book(const lib &) {
-
-}
-
-void insert_book(const lib &) {
-
-}
-
-void modify_book(const lib &) {
-
-}
-
-void delete_book(const lib &) {
-
-}
+void delete_book(const Book &) {}

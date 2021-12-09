@@ -2,6 +2,10 @@
 
 #include <sstream>
 
+TokenScanner::TokenScanner() {}
+
+TokenScanner::~TokenScanner() {}
+
 TokenScanner::TokenScanner(const string &str) { buffer.str(str); }
 void TokenScanner::setInput(const string &str) { buffer.str(str); }
 
