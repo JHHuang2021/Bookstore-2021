@@ -3,13 +3,19 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
+#include <stack>
 #include <string>
 
-#include "unrolled_linklist.hpp"
+#include "account.h"
+#include "lib.h"
+#include "parser.h"
+#include "unrolled_linklist.h"
+#define mkpr pair<account, book>
+Ull user_info("user_info"), book_info("book_info");
+
 int main() {
     // freopen("test.in", "r", stdin);
     // freopen("test.out", "w", stdout);
-    // ! Notice
     // If you are using dynamic-link library, the DLL
     // file (filename extension is `.so` in Linux and
     // `.dll` in Windows) must be in a location that
@@ -20,66 +26,26 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-    // set<int> array;
-    Ull testUll("test.dat");
-    // testUll.addNode(UllNode("test" + to_string(0), 1));
-    // testUll.addNode(UllNode("test" + to_string(1), 1));
-    // for (int i = 0; i <= 300; i++)
-    //     testUll.addNode(UllNode("test" + to_string(300-i), i));
-    // testUll.findNode("test0", array);
-    // while (!array.empty()) {
-    //     cout << *array.begin() << endl;
-    //     array.erase(array.begin());
-    // }
-    // cout << endl;
-    // for (int i = 0; i <= 300; i++)
-    //     testUll.deleteNode(UllNode("test" + to_string(i), 300 - i));
-    // testUll.findNode("test0", array);
-    // while (!array.empty()) {
-    //     cout << *array.begin() << endl;
-    //     array.erase(array.begin());
-    // }
-    // cout << endl;
-    // for (int i = 0; i <= 300; i++)
-    //     testUll.deleteNode(UllNode("test" + to_string(0), i));
-    // testUll.findNode("test0", array);
-    // while (!array.empty()) {
-    //     cout << *array.begin() << endl;
-    //     array.erase(array.begin());
-    // }
-    int n;
-    cin >> n;
-    getchar();
-    for (int i = 1; i <= n; i++) {
-        string str;
-        getline(cin, str);
-        istringstream in(str);
-        in >> str;
-        if (str == "insert") {
-            string str1, str2;
-            in >> str1 >> str2;
-            testUll.addNode(UllNode(str1, atoi(str2.c_str())));
-        }
-        if (str == "find") {
-            string str1;
-            set<int> tmp;
-            tmp.clear();
-            in >> str1;
-            testUll.findNode(str1, tmp);
-            if (tmp.empty())
-                cout << "null";
-            else
-                while (!tmp.empty()) {
-                    cout << *tmp.begin() << " ";
-                    tmp.erase(tmp.begin());
-                }
-            cout << '\n';
-        }
-        if (str == "delete") {
-            string str1, str2;
-            in >> str1 >> str2;
-            testUll.deleteNode(UllNode(str1, atoi(str2.c_str())));
+    void process_line(TokenScanner & line);
+    stack<mkpr> user_stack;
+    while (true) {
+        string line;
+        getline(cin, line);
+        if (line == "") break;
+        TokenScanner buffer(line);
+        try {
+        } catch (string info) {
+            cout << info << endl;
         }
     }
     return 0;
+}
+
+void process_line(TokenScanner &line) {
+    string token;
+    token = line.nextToken();
+    if (token == "-1") return;
+    if (token == "su") {
+        string user_name = line.nextToken(), password = line.nextToken();
+    }
 }
