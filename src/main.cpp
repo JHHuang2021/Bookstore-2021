@@ -83,7 +83,13 @@ void process_line(TokenScanner &line) {
             Passwd(user_id, new_password, priority, old_password);
         else
             Passwd(user_id, old_password, priority, "");
-    }else if (token == "useradd") {
-    // - `{3}` `useradd [User-ID] [Password] [Priority] [User-Name]`
+    } else if (token == "useradd") {
+        //`useradd [User-ID] [Password] [Priority] [User-Name]`
+        string user_id, password, priority, user_name;
+        user_id = line.nextToken(), password = line.nextToken(),
+        priority = line.nextToken(), user_name = line.nextToken();
+        if (user_stack.empty()) throw Error();
+        user_stack.rend()->first.UserAdd(user_id, password,
+                                         atoi(priority.c_str()), user_name);
     }
 }
