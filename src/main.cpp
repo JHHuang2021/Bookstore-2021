@@ -64,5 +64,10 @@ void process_line(TokenScanner &line) {
     } else if (token == "logout") {
         if (user_stack.empty()) throw Error();
         user_stack.pop_back();
+    } else if (token == "register") {
+        string user_id, password, user_name;
+        user_id = line.nextToken(), password = line.nextToken(),
+        user_name = line.nextToken();
+        Register(user_id, password, user_name);
     }
 }
