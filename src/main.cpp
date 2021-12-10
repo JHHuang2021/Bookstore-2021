@@ -3,6 +3,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include <unordered_map>
 
 #include "account.h"
 #include "error.h"
@@ -91,5 +92,11 @@ void process_line(TokenScanner &line) {
         if (user_stack.empty()) throw Error();
         user_stack.rend()->first.UserAdd(user_id, password,
                                          atoi(priority.c_str()), user_name);
+    } else if (token == "delete") {
+        string user_id;
+        user_id = line.nextToken();
+        for (auto iter : user_stack)
+            if (iter.first.GetUserId() == user_id) throw Error();
+        Delete(user_id);
     }
 }

@@ -25,6 +25,7 @@ Account &Account::operator=(const Account &obj) {
 }
 
 string Account::GetPasswd() { return this->password_; }
+string Account::GetUserId() { return this->user_id_; }
 int Account::GetPriority() { return this->priority_; }
 
 void Register(string &user_id, string &password, string &user_name) {
@@ -59,6 +60,11 @@ void Passwd(string &user_id, string new_password, int priority,
         throw Error();
 }
 
+void Delete(string &user_id) {
+    MainInfo<Account> account_info("account_info");
+    account_info.DeleteInfo(user_id);
+}
+
 void Account::UserAdd(string &user_id, string &password, int priority,
                       string &user_name) {
     if (this->priority_ <= priority) throw Error();
@@ -70,9 +76,4 @@ void Account::UserAdd(string &user_id, string &password, int priority,
         Account tmp(user_id, user_name, password, priority);
         account_info.WriteInfo(tmp, user_id);
     }
-}
-
-void Account::Delete(string &user_id) {
-    MainInfo<Account> account_info("account_info");
-    account_info.DeleteInfo(user_id);
 }
