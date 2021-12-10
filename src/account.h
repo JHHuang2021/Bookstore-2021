@@ -5,6 +5,9 @@
 #include <cstring>
 using namespace std;  // todo
 class Account {
+    friend void Passwd(string &user_id, string old_password, int priority,
+                       string new_password);
+
    private:
     char user_id_[30], password_[30], user_name_[30];
     int priority_ = 0;
@@ -20,11 +23,12 @@ class Account {
 
     // void logout();
 
-    void Passwd(string &user_id, string old_password, string new_password);
     void UserAdd(string &user_id, string &password, int priority,
                  string &user_name);
     void Delete(string &user_id);
 };
+void Passwd(string &user_id, string new_password, int priority,
+            string old_password);
 
 void Register(string &user_id, string &password, string &user_name);
 bool Login(string &user_id, string password);

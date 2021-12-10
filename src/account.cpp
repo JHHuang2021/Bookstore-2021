@@ -46,13 +46,12 @@ bool Login(string &user_id, string password = "") {
     return false;
 }
 
-void Account::Passwd(string &user_id, string old_password = "",
-                     string new_password = "") {
+void Passwd(string &user_id, string new_password, int priority,
+            string old_password) {
     MainInfo<Account> account_info("account_info");
     // note!!! may slower the program
     Account tmp = account_info.FindInfo(user_id);
-    if (this->priority_ == 7 ||
-        strcmp(old_password.c_str(), tmp.password_) == 0) {
+    if (priority == 7 || strcmp(old_password.c_str(), tmp.password_) == 0) {
         strcpy(tmp.password_, new_password.c_str());
         account_info.DeleteInfo(user_id);
         account_info.WriteInfo(tmp, user_id);

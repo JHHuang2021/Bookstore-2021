@@ -69,5 +69,21 @@ void process_line(TokenScanner &line) {
         user_id = line.nextToken(), password = line.nextToken(),
         user_name = line.nextToken();
         Register(user_id, password, user_name);
+    } else if (token == "passwd") {
+        //`passwd [User-ID] ([Old-Password])? [New-Password]`
+        string user_id, old_password, new_password;
+        user_id = line.nextToken(), old_password = line.nextToken(),
+        new_password = line.nextToken();
+        int priority;
+        if (user_stack.empty())
+            priority = 0;
+        else
+            priority = user_stack.rend()->first.GetPriority();
+        if (user_id != "root")
+            Passwd(user_id, new_password, priority, old_password);
+        else
+            Passwd(user_id, old_password, priority, "");
+    }else if (token == "useradd") {
+    // - `{3}` `useradd [User-ID] [Password] [Priority] [User-Name]`
     }
 }
