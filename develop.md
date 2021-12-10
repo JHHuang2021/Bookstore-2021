@@ -220,7 +220,7 @@ public :
   }
 
   
-[修改] 不使用 system，而用 pair<Account,string> 实例化的 stack 存储即可
+[修改] 不使用 system，而用 pair<Account,string> 实例化的 vector 存储即可
 - #### system
 
   class system {

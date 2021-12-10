@@ -10,8 +10,8 @@
 #include "lib.h"
 #include "parser.h"
 #define mkpr pair<Account, Book>
-
-Ull user_info("user_info"), book_info("book_info");
+vector<mkpr> user_stack;
+MainInfo<Account> account_info("account_info");
 
 int main() {
     // freopen("test.in", "r", stdin);
@@ -27,7 +27,12 @@ int main() {
     // in Windows), the executable file can run without
     // any other file.
     void process_line(TokenScanner & line);
-    stack<mkpr> user_stack;
+    try {
+        Account tmp("root", "", "sjtu", 7);
+        account_info.WriteInfo(tmp, "root");
+    } catch (Error &ex) {
+    }
+
     while (true) {
         string line;
         getline(cin, line);
@@ -46,6 +51,18 @@ void process_line(TokenScanner &line) {
     token = line.nextToken();
     if (token == "-1") return;
     if (token == "su") {
+        Account tmp;
         string user_name = line.nextToken(), password = line.nextToken();
+        tmp = account_info.FindInfo(user_name);
+        if (password == "") {
+            if (user_stack.empty()) throw Error();
+            if (user_stack.rend()->first.GetPriority() <= tmp.GetPriority())
+                throw Error();
+        } else if (tmp.GetPasswd() != password)
+            throw Error();
+        user_stack.push_back(mkpr(tmp, Book()));
+    } else if (token == "logout") {
+        if (user_stack.empty()) throw Error();
+        user_stack.pop_back();
     }
 }

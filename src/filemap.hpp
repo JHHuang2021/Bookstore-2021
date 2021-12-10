@@ -92,7 +92,7 @@ class MainInfo {
 
     ~MainInfo(){};
 
-    void WriteInfo(T info, string &key) {
+    void WriteInfo(T &info, string key) {
         Ull key_index(file_name_ + "_ull");
         set<int> find;
         int num;

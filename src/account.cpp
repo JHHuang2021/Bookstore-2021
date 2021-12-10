@@ -9,7 +9,7 @@ Account::Account() {}
 
 Account::~Account() {}
 
-Account::Account(string &user_id, string &user_name, string &pw, int priority) {
+Account::Account(string user_id, string user_name, string pw, int priority) {
     strcpy(this->user_id_, user_id.c_str());
     strcpy(this->password_, pw.c_str());
     strcpy(this->user_name_, user_name.c_str());
@@ -25,6 +25,7 @@ Account &Account::operator=(const Account &obj) {
 }
 
 string Account::GetPasswd() { return this->password_; }
+int Account::GetPriority() { return this->priority_; }
 
 void Register(string &user_id, string &password, string &user_name) {
     MainInfo<Account> account_info("account_info");
@@ -32,8 +33,8 @@ void Register(string &user_id, string &password, string &user_name) {
         account_info.FindInfo(user_id);
         throw Error();
     } catch (Error &ex) {
-        account_info.WriteInfo(Account(user_id, user_name, password, 1),
-                               user_id);
+        Account tmp(user_id, user_name, password, 1);
+        account_info.WriteInfo(tmp, user_id);
     }
 }
 
@@ -43,4 +44,36 @@ bool Login(string &user_id, string password = "") {
     Account tmp = account_info.FindInfo(user_id);  // copy constructor
     if (tmp.GetPasswd() == password) return true;
     return false;
+}
+
+void Account::Passwd(string &user_id, string old_password = "",
+                     string new_password = "") {
+    MainInfo<Account> account_info("account_info");
+    // note!!! may slower the program
+    Account tmp = account_info.FindInfo(user_id);
+    if (this->priority_ == 7 ||
+        strcmp(old_password.c_str(), tmp.password_) == 0) {
+        strcpy(tmp.password_, new_password.c_str());
+        account_info.DeleteInfo(user_id);
+        account_info.WriteInfo(tmp, user_id);
+    } else
+        throw Error();
+}
+
+void Account::UserAdd(string &user_id, string &password, int priority,
+                      string &user_name) {
+    if (this->priority_ <= priority) throw Error();
+    MainInfo<Account> account_info("account_info");
+    try {
+        account_info.FindInfo(user_id);
+        throw Error();
+    } catch (Error &ex) {
+        Account tmp(user_id, user_name, password, priority);
+        account_info.WriteInfo(tmp, user_id);
+    }
+}
+
+void Account::Delete(string &user_id) {
+    MainInfo<Account> account_info("account_info");
+    account_info.DeleteInfo(user_id);
 }

@@ -11,17 +11,19 @@ class Account {
 
    public:
     Account();
-    Account(string &user_id, string &user_name, string &pw, int priority);
+    Account(string user_id, string user_name, string pw, int priority);
     ~Account();
 
     Account &operator=(const Account &obj);
     string GetPasswd();
+    int GetPriority();
 
     // void logout();
 
-    void Passwd(char *user_id, char *old_password, char *new_password);
-    void Show(char *identity, char *Identity);
-    void Buy(char *ISBN, int Quantity);
+    void Passwd(string &user_id, string old_password, string new_password);
+    void UserAdd(string &user_id, string &password, int priority,
+                 string &user_name);
+    void Delete(string &user_id);
 };
 
 void Register(string &user_id, string &password, string &user_name);
