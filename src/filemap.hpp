@@ -19,7 +19,6 @@ class UllNode {
     char str_[65] = "";  // key
 
     bool operator==(const UllNode &obj) const;
-    bool operator<=(const UllNode &obj) const;
 
     UllNode(){};
 
@@ -34,7 +33,7 @@ class UllBlock {  // 0-base
    public:
     int nxt_ = -1, pre_ = -1, ind_ = 0;
     int num_ = 0;
-    UllNode start_, end_;
+    char start_[65] = "", end_[65] = "";
     UllNode array_[BLOCK_SIZE];  // 0-base
 
     UllBlock(){};

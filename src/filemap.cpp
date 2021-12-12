@@ -10,7 +10,7 @@ UllNode::UllNode(const string &isbn, const int &index) {
     this->index_ = index;
 }
 
-// bool UllNode::Cmp(const UllNode &lhs, const UllNode &rhs) {
+//bool UllNode::Cmp(const UllNode &lhs, const UllNode &rhs) {
 //    if (strcmp(lhs.str_, rhs.str_) < 0)
 //        return true;
 //    else
@@ -33,17 +33,6 @@ bool UllNode::operator==(const UllNode &obj) const {
     if (strcmp(this->str_, obj.str_) == 0 && this->index_ == obj.index_)
         return true;
     return false;
-}
-bool UllNode::operator<=(const UllNode &obj) const {
-    int cmp = strcmp(this->str_, obj.str_);
-    if (cmp == 0)
-        return this->index_ <= obj.index_;
-    else {
-        if (cmp < 0)
-            return true;
-        else
-            return false;
-    }
 }
 
 UllNode &UllNode::operator=(const UllNode &rhs) {
@@ -87,7 +76,7 @@ void Ull::AddNode(const UllNode &book) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         index = tmp.nxt_;
-        if (!UllNode::Cmp(tmp.end_, book)) {
+        if (strcmp(tmp.end_, book.str_) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            book, UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
@@ -107,7 +96,7 @@ void Ull::AddNode(const UllNode &book) {
     }
     index = tmp.ind_;
     auto binary_find =
-        lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
+            lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
     // update the bound
     for (int j = tmp.num_ - 1; j >= i; j--)
@@ -116,8 +105,8 @@ void Ull::AddNode(const UllNode &book) {
     tmp.num_++;
 
     // operations that might make the program slower
-    tmp.start_ = tmp.array_[0];
-    tmp.end_ = tmp.array_[tmp.num_ - 1];
+    strcpy(tmp.start_, tmp.array_[0].str_);
+    strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
     if (tmp.num_ <= BLOCK_SPLIT_THRESHOLD) {
         ffile_.seekp(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
@@ -142,9 +131,9 @@ void Ull::SplitBlock(UllBlock &obj, const int &index) {  // to be checked
         tmp.array_[i - BLOCK_SPLIT_LEFT] = obj.array_[i];
     tmp.num_ = obj.num_ - BLOCK_SPLIT_LEFT;
     obj.num_ = BLOCK_SPLIT_LEFT;
-    obj.end_ = obj.array_[obj.num_ - 1];
-    tmp.start_ = tmp.array_[0];
-    tmp.end_ = tmp.array_[tmp.num_ - 1];
+    strcpy(obj.end_, obj.array_[obj.num_ - 1].str_);
+    strcpy(tmp.start_, tmp.array_[0].str_);
+    strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
     tmp.nxt_ = obj.nxt_;
     tmp.pre_ = index;
     tmp.ind_ = put_index;
@@ -172,8 +161,7 @@ void Ull::FindNode(const string &key, set<int> &tp) {
     for (index = first_index; index != -1;) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (strcmp(tmp.start_.str_, key.c_str()) <= 0 &&
-            strcmp(tmp.end_.str_, key.c_str()) >= 0) {
+        if (strcmp(tmp.start_, key.c_str()) <= 0 && strcmp(tmp.end_, key.c_str()) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            UllNode(key, INT_MIN), UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
@@ -200,12 +188,12 @@ void Ull::DeleteNode(const UllNode &node) {
     for (index = first_index; index != -1;) {  // find the block
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (!UllNode::Cmp(node, tmp.start_) && node <= tmp.end_) {
+        if (strcmp(node.str_, tmp.start_) >= 0 && strcmp(node.str_, tmp.end_) <= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            node, UllNode::Cmp);
             i = binary_find - tmp.array_;
-            //            for (i = 0; i < tmp.num_; i++)
-            //                // find the position in the block
+//            for (i = 0; i < tmp.num_; i++)
+//                // find the position in the block
             if (!(node == tmp.array_[i]) || i == tmp.num_) {
                 index = tmp.nxt_;
                 continue;
@@ -241,8 +229,8 @@ void Ull::DeleteNode(const UllNode &node) {
                 }
             }
 
-            tmp.start_ = tmp.array_[0];
-            tmp.end_ = tmp.array_[tmp.num_ - 1];
+            strcpy(tmp.start_, tmp.array_[0].str_);
+            strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
             ffile_.seekp(2 * sizeof(int) + index * sizeof(UllBlock));
             ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
             ffile_.close();
