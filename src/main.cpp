@@ -28,8 +28,8 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-    freopen("test.in", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.in", "r", stdin);
+    // freopen("test.out", "w", stdout);
     int n;
     cin >> n;
     getchar();
