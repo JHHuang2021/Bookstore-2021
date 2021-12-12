@@ -77,7 +77,6 @@ void Ull::AddNode(const UllNode &book) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         index = tmp.nxt_;
-        if (strcmp(tmp.start_, book.str_) > 0) break;
         if (strcmp(tmp.end_, book.str_) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            book, UllNode::Cmp);
@@ -171,8 +170,7 @@ void Ull::FindNode(const string &key, set<int> &tp) {
     for (index = first_index; index != -1;) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (strcmp(tmp.start_, key.c_str()) > 0) break;
-        if (strcmp(tmp.end_, key.c_str()) >= 0) {
+        if (strcmp(tmp.start_, key.c_str()) <= 0 && strcmp(tmp.end_, key.c_str()) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            UllNode(key, INT_MIN), UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
