@@ -206,7 +206,7 @@ void Ull::DeleteNode(const UllNode &node) {
             i = binary_find - tmp.array_;
 //            for (i = 0; i < tmp.num_; i++)
 //                // find the position in the block
-            if (!(node == tmp.array_[i])) {
+            if (!(node == tmp.array_[i]) || i == tmp.num_) {
                 index = tmp.nxt_;
                 continue;
             }

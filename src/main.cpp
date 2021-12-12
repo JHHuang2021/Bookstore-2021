@@ -12,12 +12,12 @@
 #include "parser.h"
 
 #define mkpr pair<Account, Book>
-vector<mkpr> user_stack;
+vector<mkpr > user_stack;
 MainInfo<Account> account_info("account_info");
 
 int main() {
-    // freopen("test.in", "r", stdin);
-    // freopen("test.out", "w", stdout);
+//     freopen("test.in", "r", stdin);
+    freopen("test.out", "w", stdout);
     // If you are using dynamic-link library, the DLL
     // file (filename extension is `.so` in Linux and
     // `.dll` in Windows) must be in a location that
@@ -30,40 +30,56 @@ int main() {
     // any other file.
     // freopen("test.in", "r", stdin);
     // freopen("test.out", "w", stdout);
-    int n;
-    cin >> n;
-    getchar();
+//    int n;
+//    cin >> n;
+//    getchar();
     Ull test("test.dat");
-    string str;
-    for (int i = 1; i <= n; i++) {
-        getline(cin, str);
-        istringstream ss(str);
-        string token;
-        ss >> token;
-        if (token == "insert") {
-            string index, value;
-            ss >> index >> value;
-            test.AddNode(UllNode(index, atoi(value.c_str())));
-        } else if (token == "delete") {
-            string index, value;
-            ss >> index >> value;
-            test.DeleteNode(UllNode(index, atoi(value.c_str())));
-        } else if (token == "find") {
-            set<int> find;
-            string index;
-            ss >> index;
-            test.FindNode(index, find);
-            if (find.empty())
-                cout << "null" << endl;
-            else {
-                while (!find.empty()) {
-                    cout << *find.begin() << " ";
-                    find.erase(find.begin());
-                }
-                cout << "\n";
-            }
+//    string str;
+//    for (int i = 1; i <= n; i++) {
+//        getline(cin, str);
+//        istringstream ss(str);
+//        string token;
+//        ss >> token;
+//        if (token == "insert") {
+//            string index, value;
+//            ss >> index >> value;
+//            test.AddNode(UllNode(index, atoi(value.c_str())));
+//        } else if (token == "delete") {
+//            string index, value;
+//            ss >> index >> value;
+//            test.DeleteNode(UllNode(index, atoi(value.c_str())));
+//        } else if (token == "find") {
+//            set<int> find;
+//            string index;
+//            ss >> index;
+//            test.FindNode(index, find);
+//            if (find.empty())
+//                cout << "null" << endl;
+//            else {
+//                while (!find.empty()) {
+//                    cout << *find.begin() << " ";
+//                    find.erase(find.begin());
+//                }
+//                cout << "\n";
+//            }
+//        }
+//    }
+    for (int i = 0; i <= 550; i++)
+        test.AddNode(UllNode("test", i));
+    for (int i = 0; i <= 550; i++)
+        test.DeleteNode(UllNode("test", 550 - i));
+    set<int> find;
+    test.FindNode("test", find);
+    if (find.empty())
+        cout << "null" << endl;
+    else {
+        while (!find.empty()) {
+            cout << *find.begin() << " ";
+            find.erase(find.begin());
         }
+        cout << "\n";
     }
+
 
     // void process_line(TokenScanner & line);
     // try {
@@ -133,7 +149,7 @@ void process_line(TokenScanner &line) {
     } else if (token == "delete") {
         string user_id;
         user_id = line.nextToken();
-        for (auto iter : user_stack)
+        for (auto iter: user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
         Delete(user_id);
     }
