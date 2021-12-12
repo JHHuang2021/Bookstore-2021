@@ -197,8 +197,7 @@ void Ull::DeleteNode(const UllNode &node) {
     for (index = first_index; index != -1;) {  // find the block
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (strcmp(node.str_, tmp.start_) < 0) break;
-        if (strcmp(node.str_, tmp.end_) <= 0) {
+        if (strcmp(node.str_, tmp.start_) >= 0 && strcmp(node.str_, tmp.end_) <= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            node, UllNode::Cmp);
             i = binary_find - tmp.array_;

@@ -64,23 +64,23 @@ int main() {
             }
         }
     }
-    //     for (int i = -550; i <= 550; i++)
-    //         test.AddNode(UllNode("test" + to_string(i), i));
-    // //    for (int i = 0; i <= 550; i++)
-    // //        test.DeleteNode(UllNode("test" + to_string(550 - i), 550 - i));
-    //     set<int> find;
-    //     for (int i = -550; i <= 550; i++) {
-    //         test.FindNode("test" + to_string(i), find);
-    //         if (find.empty())
-    //             cout << "null" << endl;
-    //         else {
-    //             while (!find.empty()) {
-    //                 cout << *find.begin() << " ";
-    //                 find.erase(find.begin());
-    //             }
-    //             cout << "\n";
+    // for (int i = -550; i <= 550; i++)
+    //     test.AddNode(UllNode("test" + to_string(i), i));
+    // for (int i = 0; i <= 1100; i++)
+    //     test.DeleteNode(UllNode("test" + to_string(550 - i), 550 - i));
+    // set<int> find;
+    // for (int i = -550; i <= 550; i++) {
+    //     test.FindNode("test" + to_string(i), find);
+    //     if (find.empty())
+    //         cout << "null" << endl;
+    //     else {
+    //         while (!find.empty()) {
+    //             cout << *find.begin() << " ";
+    //             find.erase(find.begin());
     //         }
+    //         cout << "\n";
     //     }
+    // }
 
     // void process_line(TokenScanner & line);
     // try {
