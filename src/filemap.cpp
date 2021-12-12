@@ -67,7 +67,8 @@ void Ull::AddNode(const UllNode &book) {
     for (index = first_index; index != -1;) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        index = tmp.nxt;
+        index = tmp.nxt_;
+        if (strcmp(tmp.start_, book.str_) > 0) break;
         if (strcmp(tmp.end_, book.str_) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            book, UllNode::Cmp);
@@ -82,16 +83,19 @@ void Ull::AddNode(const UllNode &book) {
                     break;
         }
     }
-
-    for (index = first_index; index != -1;) {  // find the block
-        ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
+    if (index != -1) {
+        ffile_.seekg(2 * sizeof(int) + tmp.pre_ * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (strcmp(book.str_, tmp.end_) <= 0 || tmp.nxt == -1)
-            break;
-        else
-            index = tmp.nxt;
     }
-
+    index = tmp.ind_;
+    // for (index = first_index; index != -1;) {  // find the block
+    //     ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
+    //     ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
+    //     if (strcmp(book.str_, tmp.end_) <= 0 || tmp.nxt_ == -1)
+    //         break;
+    //     else
+    //         index = tmp.nxt_;
+    // }
     auto binary_find =
         lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
@@ -131,9 +135,10 @@ void Ull::SplitBlock(UllBlock &obj, const int &index) {  // to be checked
     strcpy(obj.end_, obj.array_[obj.num_ - 1].str_);
     strcpy(tmp.start_, tmp.array_[0].str_);
     strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
-    tmp.nxt = obj.nxt;
-    tmp.pre = index;
-    obj.nxt = put_index;
+    tmp.nxt_ = obj.nxt_;
+    tmp.pre_ = index;
+    tmp.ind_ = put_index;
+    obj.nxt_ = put_index;
 
     ffile_.seekp(0);
     ffile_.write(reinterpret_cast<char *>(&block_num), sizeof(int));
@@ -168,7 +173,7 @@ void Ull::FindNode(const string &key, set<int> &tp) {
                 else
                     tp.insert(tmp.array_[i].index_);
         }
-        index = tmp.nxt;
+        index = tmp.nxt_;
     }
     ffile_.close();
 }
@@ -202,21 +207,21 @@ void Ull::DeleteNode(const UllNode &node) {
             tmp.num_--;
             if (tmp.num_ == 0) {
                 UllBlock tmp2;
-                if (tmp.pre > -1) {
-                    ffile_.seekg(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
+                if (tmp.pre_ > -1) {
+                    ffile_.seekg(2 * sizeof(int) + tmp.pre_ * sizeof(UllBlock));
                     ffile_.read(reinterpret_cast<char *>(&tmp2),
                                 sizeof(UllBlock));
-                    tmp2.nxt = tmp.nxt;
-                    ffile_.seekp(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
+                    tmp2.nxt_ = tmp.nxt_;
+                    ffile_.seekp(2 * sizeof(int) + tmp.pre_ * sizeof(UllBlock));
                     ffile_.write(reinterpret_cast<char *>(&tmp2),
                                  sizeof(UllBlock));
                 }
-                if (tmp.nxt > -1) {
-                    ffile_.seekg(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
+                if (tmp.nxt_ > -1) {
+                    ffile_.seekg(2 * sizeof(int) + tmp.nxt_ * sizeof(UllBlock));
                     ffile_.read(reinterpret_cast<char *>(&tmp2),
                                 sizeof(UllBlock));
-                    tmp2.pre = tmp.pre;
-                    ffile_.seekp(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
+                    tmp2.pre_ = tmp.pre_;
+                    ffile_.seekp(2 * sizeof(int) + tmp.nxt_ * sizeof(UllBlock));
                     ffile_.write(reinterpret_cast<char *>(&tmp2),
                                  sizeof(UllBlock));
                 }
@@ -229,7 +234,7 @@ void Ull::DeleteNode(const UllNode &node) {
             ffile_.close();
             return;
         }
-        index = tmp.nxt;
+        index = tmp.nxt_;
     }
     ffile_.close();
 }

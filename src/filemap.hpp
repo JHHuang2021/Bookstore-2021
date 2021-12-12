@@ -31,7 +31,7 @@ class UllNode {
 
 class UllBlock {  // 0-base
    public:
-    int nxt = -1, pre = -1;
+    int nxt_ = -1, pre_ = -1, ind_ = 0;
     int num_ = 0;
     char start_[65] = "", end_[65] = "";
     UllNode array_[BLOCK_SIZE];  // 0-base

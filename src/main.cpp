@@ -34,12 +34,9 @@ int main() {
     cin >> n;
     getchar();
     Ull test("test.dat");
-    // for (int i = 0; i < 2000; i++)
-        // test.DeleteNode(UllNode("test" + to_string(i), i));
     string str;
     for (int i = 1; i <= n; i++) {
         getline(cin, str);
-        //        getchar();
         istringstream ss(str);
         string token;
         ss >> token;
