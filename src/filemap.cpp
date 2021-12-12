@@ -93,7 +93,7 @@ void Ull::AddNode(const UllNode &book) {
     }
 
     auto binary_find =
-            lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
+        lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
     // update the bound
     for (int j = tmp.num_ - 1; j >= i; j--)
@@ -202,17 +202,24 @@ void Ull::DeleteNode(const UllNode &node) {
             tmp.num_--;
             if (tmp.num_ == 0) {
                 UllBlock tmp2;
-                ffile_.seekg(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
-                ffile_.read(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
-                tmp2.nxt = tmp.nxt;
-                ffile_.seekp(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
-                ffile_.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
-
-                ffile_.seekg(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
-                ffile_.read(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
-                tmp2.pre = tmp.pre;
-                ffile_.seekp(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
-                ffile_.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
+                if (tmp.pre > -1) {
+                    ffile_.seekg(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
+                    ffile_.read(reinterpret_cast<char *>(&tmp2),
+                                sizeof(UllBlock));
+                    tmp2.nxt = tmp.nxt;
+                    ffile_.seekp(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
+                    ffile_.write(reinterpret_cast<char *>(&tmp2),
+                                 sizeof(UllBlock));
+                }
+                if (tmp.nxt > -1) {
+                    ffile_.seekg(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
+                    ffile_.read(reinterpret_cast<char *>(&tmp2),
+                                sizeof(UllBlock));
+                    tmp2.pre = tmp.pre;
+                    ffile_.seekp(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
+                    ffile_.write(reinterpret_cast<char *>(&tmp2),
+                                 sizeof(UllBlock));
+                }
             }
 
             strcpy(tmp.start_, tmp.array_[0].str_);
