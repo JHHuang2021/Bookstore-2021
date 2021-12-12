@@ -13,12 +13,14 @@ UllNode::UllNode(const string &isbn, const int &index) {
     strcpy(str_, isbn.c_str());
     this->index_ = index;
 }
+
 bool UllNode::Cmp(const UllNode &lhs, const UllNode &rhs) {
     if (strcmp(lhs.str_, rhs.str_) < 0)
         return true;
     else
         return false;
 }
+
 bool UllNode::operator==(const UllNode &obj) const {
     if (strcmp(this->str_, obj.str_) == 0 && this->index_ == obj.index_)
         return true;
@@ -91,7 +93,7 @@ void Ull::AddNode(const UllNode &book) {
     }
 
     auto binary_find =
-        lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
+            lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
     // update the bound
     for (int j = tmp.num_ - 1; j >= i; j--)
@@ -183,7 +185,6 @@ void Ull::DeleteNode(const UllNode &node) {
     for (index = first_index; index != -1;) {  // find the block
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        index = tmp.nxt;
         if (strcmp(node.str_, tmp.start_) < 0) break;
         if (strcmp(node.str_, tmp.end_) <= 0) {
             for (i = 0; i < tmp.num_; i++)
@@ -221,6 +222,7 @@ void Ull::DeleteNode(const UllNode &node) {
             ffile_.close();
             return;
         }
+        index = tmp.nxt;
     }
     ffile_.close();
 }

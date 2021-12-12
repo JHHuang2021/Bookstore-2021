@@ -10,8 +10,9 @@
 #include "filemap.hpp"
 #include "lib.h"
 #include "parser.h"
+
 #define mkpr pair<Account, Book>
-vector<mkpr> user_stack;
+vector<mkpr > user_stack;
 MainInfo<Account> account_info("account_info");
 
 int main() {
@@ -27,13 +28,16 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-
+    freopen("test.in", "r", stdin);
+    freopen("test.out", "w", stdout);
     int n;
     cin >> n;
+//    getchar();
     Ull test("test.dat");
     string str;
-    for (int i = 1; i <= n; i++) {
+    for (int i = 1; i <= n+1; i++) {
         getline(cin, str);
+//        getchar();
         istringstream ss(str);
         string token;
         ss >> token;
@@ -50,9 +54,14 @@ int main() {
             string index;
             ss >> index;
             test.FindNode(index, find);
-            while (!find.empty()) {
-                cout << *find.begin() << " ";
-                find.erase(find.begin());
+            if (find.empty())
+                cout << "null" << endl;
+            else {
+                while (!find.empty()) {
+                    cout << *find.begin() << " ";
+                    find.erase(find.begin());
+                }
+                cout << "\n";
             }
         }
     }
@@ -125,7 +134,7 @@ void process_line(TokenScanner &line) {
     } else if (token == "delete") {
         string user_id;
         user_id = line.nextToken();
-        for (auto iter : user_stack)
+        for (auto iter: user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
         Delete(user_id);
     }

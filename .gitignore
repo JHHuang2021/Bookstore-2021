@@ -9,3 +9,9 @@ Makefile
 .vscode/
 CMakeFiles/
 build/
+account_info
+account_info_ull
+Bookstore.cbp
+test.dat
+test.in
+test.out
