@@ -16,8 +16,8 @@ vector<mkpr> user_stack;
 MainInfo<Account> account_info("account_info");
 
 int main() {
-    //     freopen("test.in", "r", stdin);
-    // freopen("test.out", "w", stdout);
+    freopen("test.in", "r", stdin);
+    freopen("test.out", "w", stdout);
     // If you are using dynamic-link library, the DLL
     // file (filename extension is `.so` in Linux and
     // `.dll` in Windows) must be in a location that

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(Bookstore)
 
 set(CMAKE_CXX_STANDARD 20)
-#add_compile_options(-std=c++2a -fconcepts -g )
+add_compile_options(-std=c++2a -g )
 
 # include_directories(
 #         ${PROJECT_SOURCE_DIR}/src/
