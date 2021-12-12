@@ -1,24 +1,32 @@
 #include "filemap.hpp"
 
 #include <algorithm>
-#include <cstdint>
 #include <cstring>
-#include <exception>
 #include <fstream>
 #include <ostream>
-
-#include "error.h"
 
 UllNode::UllNode(const string &isbn, const int &index) {
     strcpy(str_, isbn.c_str());
     this->index_ = index;
 }
 
+//bool UllNode::Cmp(const UllNode &lhs, const UllNode &rhs) {
+//    if (strcmp(lhs.str_, rhs.str_) < 0)
+//        return true;
+//    else
+//        return false;
+//}
+
 bool UllNode::Cmp(const UllNode &lhs, const UllNode &rhs) {
-    if (strcmp(lhs.str_, rhs.str_) < 0)
-        return true;
-    else
-        return false;
+    int cmp = strcmp(lhs.str_, rhs.str_);
+    if (cmp == 0)
+        return lhs.index_ < rhs.index_;
+    else {
+        if (cmp < 0)
+            return true;
+        else
+            return false;
+    }
 }
 
 bool UllNode::operator==(const UllNode &obj) const {
@@ -39,7 +47,8 @@ UllBlock &UllBlock::operator=(const UllBlock &rhs) {
     return *this;
 }
 
-Ull::Ull(const string &file_name) : file_name_(file_name) {
+Ull::Ull(
+        const string &file_name) : file_name_(file_name) {
     ifstream in_1(file_name, ifstream::in);
 
     if (!in_1) {
@@ -97,7 +106,7 @@ void Ull::AddNode(const UllNode &book) {
     //         index = tmp.nxt_;
     // }
     auto binary_find =
-        lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
+            lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
     // update the bound
     for (int j = tmp.num_ - 1; j >= i; j--)
@@ -165,7 +174,7 @@ void Ull::FindNode(const string &key, set<int> &tp) {
         if (strcmp(tmp.start_, key.c_str()) > 0) break;
         if (strcmp(tmp.end_, key.c_str()) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
-                                           UllNode(key, 0), UllNode::Cmp);
+                                           UllNode(key, INT_MIN), UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
             for (int i = indexx; i < tmp.num_; i++)
                 if (strcmp(tmp.array_[i].str_, key.c_str()) != 0)
@@ -192,10 +201,15 @@ void Ull::DeleteNode(const UllNode &node) {
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(node.str_, tmp.start_) < 0) break;
         if (strcmp(node.str_, tmp.end_) <= 0) {
-            for (i = 0; i < tmp.num_; i++)
-                // find the position in the block
-                if (node == tmp.array_[i]) break;
-            if (i == tmp.num_) continue;
+            auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
+                                           node, UllNode::Cmp);
+            i = binary_find - tmp.array_;
+//            for (i = 0; i < tmp.num_; i++)
+//                // find the position in the block
+            if (!(node == tmp.array_[i])) {
+                index = tmp.nxt_;
+                continue;
+            }
 
             strcpy(tmp.array_[i].str_, "");
             tmp.array_[i].index_ = 0;
