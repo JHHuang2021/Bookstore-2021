@@ -30,9 +30,8 @@ class UllNode {
 };
 
 class UllBlock {  // 0-base
-   private:
    public:
-    bool if_occupied_ = false;
+    int nxt = -1, pre = -1;
     int num_ = 0;
     char start_[65] = "", end_[65] = "";
     UllNode array_[BLOCK_SIZE];  // 0-base
@@ -46,6 +45,7 @@ class Ull {
    private:
     const string file_name_;
     fstream ffile_;  // note that a digit is stored in ffile
+    // the other digit means the index of the first block
 
     inline void DelBlock(const int &index);
 

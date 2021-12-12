@@ -27,23 +27,53 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-    void process_line(TokenScanner & line);
-    try {
-        Account tmp("root", "", "sjtu", 7);
-        account_info.WriteInfo(tmp, "root");
-    } catch (Error &ex) {
-    }
 
-    while (true) {
-        string line;
-        getline(cin, line);
-        if (line == "") break;
-        TokenScanner buffer(line);
-        try {
-        } catch (string info) {
-            cout << info << endl;
+    int n;
+    cin >> n;
+    Ull test("test.dat");
+    string str;
+    for (int i = 1; i <= n; i++) {
+        getline(cin, str);
+        istringstream ss(str);
+        string token;
+        ss >> token;
+        if (token == "insert") {
+            string index, value;
+            ss >> index >> value;
+            test.AddNode(UllNode(index, atoi(value.c_str())));
+        } else if (token == "delete") {
+            string index, value;
+            ss >> index >> value;
+            test.DeleteNode(UllNode(index, atoi(value.c_str())));
+        } else if (token == "find") {
+            set<int> find;
+            string index;
+            ss >> index;
+            test.FindNode(index, find);
+            while (!find.empty()) {
+                cout << *find.begin() << " ";
+                find.erase(find.begin());
+            }
         }
     }
+
+    // void process_line(TokenScanner & line);
+    // try {
+    //     Account tmp("root", "", "sjtu", 7);
+    //     account_info.WriteInfo(tmp, "root");
+    // } catch (Error &ex) {
+    // }
+
+    // while (true) {
+    //     string line;
+    //     getline(cin, line);
+    //     if (line == "") break;
+    //     TokenScanner buffer(line);
+    //     try {
+    //     } catch (string info) {
+    //         cout << info << endl;
+    //     }
+    // }
     return 0;
 }
 

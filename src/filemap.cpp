@@ -43,25 +43,29 @@ Ull::Ull(const string &file_name) : file_name_(file_name) {
     if (!in_1) {
         ofstream out(file_name, ofstream::out);
         int block_num = 1;
+        int first_index = 0;
         UllBlock tmp;
         ffile_.open(file_name, fstream::in | fstream::binary | fstream::out);
         ffile_.write(reinterpret_cast<char *>(&block_num), sizeof(int));
+        ffile_.write(reinterpret_cast<char *>(&first_index), sizeof(int));
         ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         ffile_.close();
     }
 }
 
 void Ull::AddNode(const UllNode &book) {
-    int block_num;
+    int block_num, first_index;
     ffile_.close();
     ffile_.open(file_name_, fstream::out | fstream::binary | fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
+    ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
     UllBlock tmp;
-    int i = 0, index = 0;
-
-    for (index = 0; index < block_num; index++) {
+    int i = 0, index = first_index;
+    for (index = first_index; index != -1;) {
+        ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
+        index = tmp.nxt;
         if (strcmp(tmp.end_, book.str_) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            book, UllNode::Cmp);
@@ -76,13 +80,16 @@ void Ull::AddNode(const UllNode &book) {
                     break;
         }
     }
-    ffile_.seekg(sizeof(int));
 
-    for (index = 0; index < block_num; index++) {  // find the block
+    for (index = first_index; index != -1;) {  // find the block
+        ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
-        if (strcmp(book.str_, tmp.end_) <= 0) break;
+        if (strcmp(book.str_, tmp.end_) <= 0 || tmp.nxt == -1)
+            break;
+        else
+            index = tmp.nxt;
     }
-    if (index == block_num) index--;
+
     auto binary_find =
         lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
@@ -96,7 +103,7 @@ void Ull::AddNode(const UllNode &book) {
     strcpy(tmp.start_, tmp.array_[0].str_);
     strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
     if (tmp.num_ <= BLOCK_SPLIT_THRESHOLD) {
-        ffile_.seekp(sizeof(int) + index * sizeof(UllBlock));
+        ffile_.seekp(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
     } else {  // split the block and rewrite
         SplitBlock(tmp, index);
@@ -122,26 +129,33 @@ void Ull::SplitBlock(UllBlock &obj, const int &index) {  // to be checked
     strcpy(obj.end_, obj.array_[obj.num_ - 1].str_);
     strcpy(tmp.start_, tmp.array_[0].str_);
     strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
+    tmp.nxt = obj.nxt;
+    tmp.pre = index;
+    obj.nxt = put_index;
+
     ffile_.seekp(0);
     ffile_.write(reinterpret_cast<char *>(&block_num), sizeof(int));
-    ffile_.seekp(sizeof(int) + index * sizeof(UllBlock));
+    ffile_.seekp(2 * sizeof(int) + index * sizeof(UllBlock));
     ffile_.write(reinterpret_cast<char *>(&obj), sizeof(UllBlock));
-    ffile_.seekp(sizeof(int) + put_index * sizeof(UllBlock));
+    ffile_.seekp(2 * sizeof(int) + put_index * sizeof(UllBlock));
     ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
 }
 
 void Ull::FindNode(const string &key, set<int> &tp) {
-    int block_num;
+    int block_num, first_index;
     tp.clear();
     ffile_.close();
     ffile_.open(file_name_, fstream::out | fstream::binary | fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
+    ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
     UllBlock tmp;
     int index = 0;
 
-    for (index = 0; index < block_num; index++) {
+    for (index = first_index; index != -1;) {
+        ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
+        if (strcmp(tmp.start_, key.c_str()) > 0) break;
         if (strcmp(tmp.end_, key.c_str()) >= 0) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            UllNode(key, 0), UllNode::Cmp);
@@ -152,23 +166,26 @@ void Ull::FindNode(const string &key, set<int> &tp) {
                 else
                     tp.insert(tmp.array_[i].index_);
         }
+        index = tmp.nxt;
     }
     ffile_.close();
 }
 
 void Ull::DeleteNode(const UllNode &node) {
-    int block_num;
+    int block_num, first_index;
     ffile_.close();
     ffile_.open(file_name_, fstream::out | fstream::binary | fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
+    ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
     UllBlock tmp;
     int i = 0, index = 0;
-    for (index = 0; index < block_num; index++) {  // find the block
+    for (index = first_index; index != -1;) {  // find the block
+        ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
+        index = tmp.nxt;
+        if (strcmp(node.str_, tmp.start_) < 0) break;
         if (strcmp(node.str_, tmp.end_) <= 0) {
-            // int indexx = tmp.binary_search(node.str) + 1;
-            // if (node == tmp.array[0]) indexx = 0;
             for (i = 0; i < tmp.num_; i++)
                 // find the position in the block
                 if (node == tmp.array_[i]) break;
@@ -182,10 +199,24 @@ void Ull::DeleteNode(const UllNode &node) {
             tmp.array_[tmp.num_ - 1].index_ = 0;
             strcpy(tmp.array_[tmp.num_ - 1].str_, "");
             tmp.num_--;
+            if (tmp.num_ == 0) {
+                UllBlock tmp2;
+                ffile_.seekg(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
+                ffile_.read(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
+                tmp2.nxt = tmp.nxt;
+                ffile_.seekp(2 * sizeof(int) + tmp.pre * sizeof(UllBlock));
+                ffile_.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
+
+                ffile_.seekg(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
+                ffile_.read(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
+                tmp2.pre = tmp.pre;
+                ffile_.seekp(2 * sizeof(int) + tmp.nxt * sizeof(UllBlock));
+                ffile_.write(reinterpret_cast<char *>(&tmp2), sizeof(UllBlock));
+            }
 
             strcpy(tmp.start_, tmp.array_[0].str_);
             strcpy(tmp.end_, tmp.array_[tmp.num_ - 1].str_);
-            ffile_.seekp(sizeof(int) + index * sizeof(UllBlock));
+            ffile_.seekp(2 * sizeof(int) + index * sizeof(UllBlock));
             ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
             ffile_.close();
             return;
