@@ -8,9 +8,9 @@
 
 #include "error.h"
 using namespace std;
-#define BLOCK_SIZE 1500
-#define BLOCK_SPLIT_THRESHOLD 1480
-#define BLOCK_SPLIT_LEFT 740
+#define BLOCK_SIZE 2000
+#define BLOCK_SPLIT_THRESHOLD 1980
+#define BLOCK_SPLIT_LEFT 990
 // #define BLOCK_MERGE_THRESHOLD 20
 
 class UllNode {
