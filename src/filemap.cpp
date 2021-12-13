@@ -100,23 +100,18 @@ void Ull::AddNode(const UllNode &book) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         index = tmp.nxt_;
-        if (tmp.array_[tmp.num_ - 1] >= book) {
+        if ((tmp.array_[tmp.num_ - 1] >= book) || index == -1) {
             auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            book, UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
             for (int i = indexx; i < tmp.num_; i++)  // binary_search
-                if (strcmp(tmp.array_[i].str_, book.str_) == 0) {
+                if (strcmp(tmp.array_[i].str_, book.str_) == 0)
                     if (tmp.array_[i].index_ == book.index_) {
                         ffile_.close();
                         return;
                     }
-                } else
-                    break;
+            break;
         }
-    }
-    if (index != -1) {
-        ffile_.seekg(2 * sizeof(int) + tmp.pre_ * sizeof(UllBlock));
-        ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
     }
     index = tmp.ind_;
     auto binary_find =
@@ -142,10 +137,12 @@ void Ull::AddNode(const UllNode &book) {
 }
 
 void Ull::SplitBlock(UllBlock &obj, const int &index) {  // to be checked
-    int block_num, put_index = 0;
+    int block_num, put_index = 0, first_index;
     // ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
+    ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
+
     put_index = block_num;
     block_num++;
     UllBlock tmp;
@@ -253,7 +250,8 @@ void Ull::DeleteNode(const UllNode &node) {
             ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
             ffile_.close();
             return;
-        }
+        } else if (!(node >= tmp.array_[0]))
+            break;
         index = tmp.nxt_;
     }
     ffile_.close();
