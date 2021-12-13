@@ -105,13 +105,12 @@ void Ull::AddNode(const UllNode &book) {
                                            book, UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
             for (int i = indexx; i < tmp.num_; i++)  // binary_search
-                if (strcmp(tmp.array_[i].str_, book.str_) == 0) {
+                if (strcmp(tmp.array_[i].str_, book.str_) == 0)
                     if (tmp.array_[i].index_ == book.index_) {
                         ffile_.close();
                         return;
                     }
-                } else
-                    break;
+            break;
         }
     }
     if (index != -1) {
