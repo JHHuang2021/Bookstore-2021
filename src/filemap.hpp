@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "error.h"
+#include "parser.h"
 using namespace std;
 #define BLOCK_SIZE 1000
 #define BLOCK_SPLIT_THRESHOLD 980
@@ -23,7 +24,6 @@ class UllNode {
     bool operator>=(const UllNode &obj) const;
 
     bool operator<=(const UllNode &obj) const;
-
 
     UllNode(){};
 
@@ -134,6 +134,19 @@ class MainInfo {
         ffile.read(reinterpret_cast<char *>(&tmp), sizeof(T));
         ffile.close();
         return tmp;
+    }
+
+    void FindInfo(T search, set<T> &findT) {
+        T tmp;
+        int num;
+        fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+        ffile.seekg(0);
+        ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
+        for (int i = 1; i <= num; i++) {
+            ffile.read(reinterpret_cast<char *>(&tmp), sizeof(T));
+            if (search == tmp) findT.insert(tmp);
+        }
+        ffile.close();
     }
 };
 #endif
