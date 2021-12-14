@@ -115,7 +115,7 @@ class MainInfo {
         key_index.AddNode(UllNode(key, num));
     }
 
-    void DeleteInfo(string &key) {
+    void DeleteInfo(string key) {
         Ull key_index(file_name_ + "_ull");
         set<int> find;
         key_index.FindNode(key, find);

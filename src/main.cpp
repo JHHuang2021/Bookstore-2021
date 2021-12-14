@@ -12,6 +12,7 @@
 #include "parser.h"
 
 #define mkpr pair<Account, Book>
+// may use struct
 vector<mkpr> user_stack;
 MainInfo<Account> account_info("account_info");
 
@@ -26,8 +27,8 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-    // freopen("test.in", "r", stdin);
-    // freopen("test.out", "w", stdout);
+    freopen("test.in", "r", stdin);
+    freopen("test.out", "w", stdout);
     void process_line(TokenScanner & line);
     try {
         Account tmp("root", "", "sjtu", 7);
@@ -58,7 +59,7 @@ void process_line(TokenScanner &line) {
         tmp = account_info.FindInfo(user_name);
         if (password == "") {
             if (user_stack.empty()) throw Error();
-            if (user_stack.rend()->first.GetPriority() <= tmp.GetPriority())
+            if (user_stack.rbegin()->first.GetPriority() <= tmp.GetPriority())
                 throw Error();
         } else if (tmp.GetPasswd() != password)
             throw Error();
@@ -80,7 +81,7 @@ void process_line(TokenScanner &line) {
         if (user_stack.empty())
             priority = 0;
         else
-            priority = user_stack.rend()->first.GetPriority();
+            priority = user_stack.rbegin()->first.GetPriority();
         if (user_id != "root")
             Passwd(user_id, new_password, priority, old_password);
         else
@@ -91,19 +92,38 @@ void process_line(TokenScanner &line) {
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
         if (user_stack.empty()) throw Error();
-        user_stack.rend()->first.UserAdd(user_id, password,
-                                         atoi(priority.c_str()), user_name);
+        user_stack.rbegin()->first.UserAdd(user_id, password,
+                                           atoi(priority.c_str()), user_name);
     } else if (token == "delete") {
+        if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string user_id;
         user_id = line.nextToken();
         for (auto iter : user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
         Delete(user_id);
     } else if (token == "show") {
-        if (user_stack.rend()->first.GetPriority() == 0) throw Error();
+        if (user_stack.empty()) throw Error();
+        if (user_stack.rbegin()->first.GetPriority() == 0) throw Error();
         Show(line);
     } else if (token == "buy") {
-        if (user_stack.rend()->first.GetPriority() == 0) throw Error();
+        if (user_stack.empty()) throw Error();
+        if (user_stack.rbegin()->first.GetPriority() == 0) throw Error();
         BuyBook(line);
+    } else if (token == "select") {
+        if (user_stack.empty()) throw Error();
+        if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
+        // operations to be modified
+        user_stack.rbegin()->second = Select(line);
+    } else if (token == "modify") {
+        if (user_stack.empty()) throw Error();
+        if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
+        if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
+        ModifyBook(user_stack.rbegin()->second, line);
+    } else if (token == "import") {
+        if (user_stack.empty()) throw Error();
+        if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
+        if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
+        Import(user_stack.rbegin()->second, atoi(line.nextToken().c_str()),
+               atof(line.nextToken().c_str()));
     }
 }

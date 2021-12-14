@@ -8,6 +8,11 @@
 using namespace std;
 
 class Book {
+    friend Book Select(TokenScanner &line);
+    friend void ModifyBook(Book &book, TokenScanner &line);
+    friend void BuyBook(TokenScanner &line);
+    friend void Import(Book &book, int quantity, double total_cost);
+
    private:
     char ISBN_[21];
     char book_name_[61];
@@ -18,8 +23,10 @@ class Book {
    public:
     bool operator=(Book &obj) const;
     bool operator<(Book &obj);
+    Book &operator=(Book obj);
     Book();
-    Book(string &ISBN, string &book_name, string &author, string &keyword);
+    Book(string ISBN, string book_name, string author, string keyword,
+         int quantity = 0, double price = 0);
     ~Book();
     const string GetISBN() const;
     const string GetBookName() const;
@@ -31,7 +38,8 @@ class Book {
 
 void Show(TokenScanner &line);
 void BuyBook(TokenScanner &line);
-void InsertBook(const Book &);
-void ModifyBook(const Book &);
+Book Select(TokenScanner &line);
+void ModifyBook(Book &book, TokenScanner &line);
+void Import(Book &book, int quantity, double total_cost);
 
 #endif
