@@ -13,7 +13,8 @@ build/
 account_info
 account_info_ull
 Bookstore.cbp
-test.dat
 test.in
 test.out
-test
+book_info
+book_info_ull
+log

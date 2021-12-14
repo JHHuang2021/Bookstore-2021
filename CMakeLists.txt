@@ -15,6 +15,7 @@ add_compile_options(-std=c++2a -g )
 #         )
 add_executable(code 
 ${PROJECT_SOURCE_DIR}/src/error.cpp
+${PROJECT_SOURCE_DIR}/src/log.cpp
 ${PROJECT_SOURCE_DIR}/src/filemap.cpp
 ${PROJECT_SOURCE_DIR}/src/parser.cpp
 ${PROJECT_SOURCE_DIR}/src/lib.cpp

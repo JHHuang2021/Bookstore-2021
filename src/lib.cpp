@@ -2,10 +2,13 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <iomanip>
+#include <ios>
 #include <string>
 
 #include "error.h"
 #include "filemap.hpp"
+#include "log.h"
 #include "parser.h"
 
 Book::Book() {}
@@ -67,7 +70,12 @@ void Show(TokenScanner &line) {
     string ISBN = "", book_name = "", author = "", keyword = "";
     strcpy(tmp, line.nextToken().c_str());
     char *token = strtok(tmp, "=");
-    if (string(token) == "-ISBN") {
+    if (string(token) == "finance") {
+        int times = atoi(line.nextToken().c_str());
+        Log log("log");
+        log.ShowFinance(times);
+        return;
+    } else if (string(token) == "-ISBN") {
         ISBN = string(strtok(nullptr, " "));
         if (ISBN == "") throw Error();
     } else if (string(token) == "-name") {
@@ -108,9 +116,11 @@ void BuyBook(TokenScanner &line) {
         throw Error();
     else
         tmp.quantity_ -= quantity_int;
-    book_info.DeleteInfo(tmp.ISBN_);
     // Delete may return T to make the program faster
     book_info.ModifyInfo(tmp, tmp.index_, tmp.ISBN_, tmp.ISBN_);
+    cout << fixed << setprecision(2) << quantity_int * tmp.price_ << endl;
+    Log log("log");
+    log.Record(to_string(quantity_int * tmp.price_));
 }
 
 Book Select(TokenScanner &line) {
@@ -168,9 +178,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
     book_info.ModifyInfo(book, book.index_, old_ISBN, book.ISBN_);
 }
 
-void Import(Book &book, double total_cost, int quantity) {
+void Import(Book &book, int quantity, double total_cost) {
     MainInfo<Book> book_info("book_info");
-    book_info.DeleteInfo(book.ISBN_);
     book.quantity_ += quantity;
     book_info.ModifyInfo(book, book.index_, book.ISBN_, book.ISBN_);
 }

@@ -9,6 +9,7 @@
 #include "error.h"
 #include "filemap.hpp"
 #include "lib.h"
+#include "log.h"
 #include "parser.h"
 
 #define mkpr pair<Account, Book>
@@ -127,8 +128,11 @@ void process_line(TokenScanner &line) {
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
-        Import(user_stack.rbegin()->second, atof(line.nextToken().c_str()),
-               atoi(line.nextToken().c_str()));
+        string quantity = line.nextToken(), total_cost = line.nextToken();
+        Import(user_stack.rbegin()->second, atoi(quantity.c_str()),
+               atof(total_cost.c_str()));
+        Log log("log");
+        log.Record("-" + total_cost);
     } else
         throw Error();
 }

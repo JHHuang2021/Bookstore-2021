@@ -11,7 +11,7 @@ class Book {
     friend Book Select(TokenScanner &line);
     friend void ModifyBook(Book &book, TokenScanner &line);
     friend void BuyBook(TokenScanner &line);
-    friend void Import(Book &book, double total_cost, int quantity);
+    friend void Import(Book &book, int quantity, double total_cost);
 
    private:
     int index_ = 0;
