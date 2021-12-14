@@ -112,7 +112,7 @@ class MainInfo {
         ffile.write(reinterpret_cast<char *>(&info), sizeof(T));
 
         ffile.close();
-        key_index.AddNode(UllNode(key, num));
+        key_index.AddNode(UllNode(key, num - 1));
     }
 
     void DeleteInfo(string key) {
@@ -147,6 +147,27 @@ class MainInfo {
             if (search == tmp) findT.insert(tmp);
         }
         ffile.close();
+    }
+
+    int GetNum() {
+        int num = 0;
+        fstream ffile(file_name_, fstream::out | fstream::in | fstream::binary);
+        ffile.seekg(0);
+        ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
+        ffile.close();
+        return num;
+    }
+
+    void ModifyInfo(T &modify, int index, string old_key, string new_key) {
+        fstream ffile(file_name_, fstream::out | fstream::in | fstream::binary);
+        ffile.seekp(sizeof(int) + index * sizeof(T));
+        ffile.write(reinterpret_cast<char *>(&modify), sizeof(T));
+        ffile.close();
+        if (old_key != new_key) {
+            Ull key_index(file_name_ + "_ull");
+            key_index.DeleteNode(UllNode(old_key, index));
+            key_index.AddNode(UllNode(new_key, index));
+        }
     }
 };
 #endif

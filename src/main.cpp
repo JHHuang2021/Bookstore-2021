@@ -39,11 +39,13 @@ int main() {
     while (true) {
         string line;
         getline(cin, line);
-        if (line == "") break;
+        if (line == "") continue;
+        if (line == "exit" || line == "quit") break;
         TokenScanner buffer(line);
         try {
-        } catch (string info) {
-            cout << info << endl;
+            process_line(buffer);
+        } catch (Error &ex) {
+            cout << ex.what();
         }
     }
     return 0;
@@ -71,6 +73,7 @@ void process_line(TokenScanner &line) {
         string user_id, password, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         user_name = line.nextToken();
+        if (line.nextToken() != "-1" || user_name == "-1") throw Error();
         Register(user_id, password, user_name);
     } else if (token == "passwd") {
         //`passwd [User-ID] ([Old-Password])? [New-Password]`
@@ -82,7 +85,7 @@ void process_line(TokenScanner &line) {
             priority = 0;
         else
             priority = user_stack.rbegin()->first.GetPriority();
-        if (user_id != "root")
+        if (user_stack.empty() || user_stack.rbegin()->first.GetPriority() != 7)
             Passwd(user_id, new_password, priority, old_password);
         else
             Passwd(user_id, old_password, priority, "");
@@ -92,6 +95,7 @@ void process_line(TokenScanner &line) {
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
         if (user_stack.empty()) throw Error();
+        if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         user_stack.rbegin()->first.UserAdd(user_id, password,
                                            atoi(priority.c_str()), user_name);
     } else if (token == "delete") {
@@ -123,7 +127,8 @@ void process_line(TokenScanner &line) {
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
-        Import(user_stack.rbegin()->second, atoi(line.nextToken().c_str()),
-               atof(line.nextToken().c_str()));
-    }
+        Import(user_stack.rbegin()->second, atof(line.nextToken().c_str()),
+               atoi(line.nextToken().c_str()));
+    } else
+        throw Error();
 }

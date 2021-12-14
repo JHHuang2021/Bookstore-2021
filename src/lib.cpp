@@ -11,11 +11,12 @@
 Book::Book() {}
 
 Book::Book(string ISBN, string book_name, string author, string keyword,
-           int quantity, double price) {
+           int index, int quantity, double price) {
     strcpy(this->ISBN_, ISBN.c_str());
     strcpy(this->book_name_, book_name.c_str());
     strcpy(this->author_, author.c_str());
     strcpy(this->keyword_, keyword.c_str());
+    this->index_ = index;
     this->quantity_ = quantity;
     this->price_ = price;
 }
@@ -29,19 +30,22 @@ const string Book::GetKeyword() const { return string(this->keyword_); };
 const int Book::GetQuantity() const { return this->quantity_; }
 const double Book::GetPrice() const { return this->price_; }
 
-Book &Book::operator=(Book obj) {
+Book &Book::operator=(const Book obj) {
     strcpy(this->book_name_, obj.book_name_);
     strcpy(this->author_, obj.author_);
     strcpy(this->ISBN_, obj.ISBN_);
     strcpy(this->keyword_, obj.keyword_);
+    this->index_ = obj.index_;
     this->price_ = obj.price_;
     this->quantity_ = obj.quantity_;
     return *this;
 }
 
-bool Book::operator<(Book &obj) { return this->GetISBN() < obj.GetISBN(); }
+bool Book::operator<(const Book &obj) const {
+    return this->GetISBN() < obj.GetISBN();
+}
 
-bool Book::operator=(Book &obj) const {
+bool Book::operator==(const Book &obj) const {
     if (strcmp(this->book_name_, "") != 0 &&
         strcmp(this->book_name_, obj.book_name_) != 0)
         return false;
@@ -51,7 +55,7 @@ bool Book::operator=(Book &obj) const {
         strcmp(this->author_, obj.author_) != 0)
         return false;
     if (strcmp(this->keyword_, "") != 0 &&
-        strstr(obj.keyword_, this->keyword_) != nullptr)
+        strstr(obj.keyword_, this->keyword_) == nullptr)
         return false;
     return true;
 }
@@ -60,34 +64,38 @@ void Show(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     set<Book> find;
     char tmp[61];
-    string ISBN, book_name, author, keyword;
+    string ISBN = "", book_name = "", author = "", keyword = "";
     strcpy(tmp, line.nextToken().c_str());
     char *token = strtok(tmp, "=");
     if (string(token) == "-ISBN") {
         ISBN = string(strtok(nullptr, " "));
         if (ISBN == "") throw Error();
-    }
-    if (string(token) == "-name") {
+    } else if (string(token) == "-name") {
         book_name = string(strtok(nullptr, " "));
+        book_name = book_name.substr(1, book_name.length() - 2);  //
         if (book_name == "") throw Error();
-    }
-    if (string(token) == "-author") {
+    } else if (string(token) == "-author") {
         author = string(strtok(nullptr, " "));
+        author = author.substr(1, author.length() - 2);  //
         if (author == "") throw Error();
-    }
-    if (string(token) == "-keyword") {
+    } else if (string(token) == "-keyword") {
         keyword = string(strtok(nullptr, " "));
+        keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "") throw Error();
     }
-    book_info.FindInfo(Book(ISBN, book_name, author, keyword), find);
-    while (!find.empty()) {
-        // [ISBN]\t[Book-Name]\t[Author]\t[Keyword]\t[Price]\t[库存数量]\n
-        auto iter = find.begin();
-        cout << iter->GetISBN() << "\t" << iter->GetBookName() << "\t"
-             << iter->GetAuthor() << "\t" << iter->GetKeyword() << "\t"
-             << iter->GetPrice() << "\t" << iter->GetQuantity() << "\n";
-        find.erase(iter);
-    }
+    book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
+    if (find.empty())
+        cout << "\n";
+    else
+        while (!find.empty()) {
+            // [ISBN]\t[Book-Name]\t[Author]\t[Keyword]\t[Price]\t[库存数量]\n
+            auto iter = find.begin();
+            cout << iter->GetISBN() << "\t" << iter->GetBookName() << "\t"
+                 << iter->GetAuthor() << "\t" << iter->GetKeyword() << "\t"
+                 << fixed << setprecision(2) << iter->GetPrice() << "\t"
+                 << iter->GetQuantity() << "\n";
+            find.erase(iter);
+        }
 }
 
 void BuyBook(TokenScanner &line) {
@@ -102,7 +110,7 @@ void BuyBook(TokenScanner &line) {
         tmp.quantity_ -= quantity_int;
     book_info.DeleteInfo(tmp.ISBN_);
     // Delete may return T to make the program faster
-    book_info.WriteInfo(tmp, tmp.ISBN_);
+    book_info.ModifyInfo(tmp, tmp.index_, tmp.ISBN_, tmp.ISBN_);
 }
 
 Book Select(TokenScanner &line) {
@@ -111,7 +119,7 @@ Book Select(TokenScanner &line) {
     try {
         return book_info.FindInfo(ISBN);
     } catch (Error &ex) {
-        Book tmp(ISBN, "", "", "");
+        Book tmp(ISBN, "", "", "", book_info.GetNum());
         book_info.WriteInfo(tmp, ISBN);
         return tmp;
     }
@@ -119,41 +127,50 @@ Book Select(TokenScanner &line) {
 
 void ModifyBook(Book &book, TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
-    book_info.DeleteInfo(book.GetISBN());
     char tmp[61];
-    string ISBN, book_name, author, keyword;
-    strcpy(tmp, line.nextToken().c_str());
-    char *token = strtok(tmp, "=");
-    if (string(token) == "-ISBN") {
-        if (ISBN != "") throw Error();
-        ISBN = string(strtok(nullptr, " "));
-        if (ISBN == "") throw Error();
-        strcpy(book.ISBN_, ISBN.c_str());
+    string old_ISBN = book.ISBN_;
+    string ISBN, book_name, author, keyword, price;
+    string nxt_token = line.nextToken();
+    while (nxt_token != "-1") {
+        strcpy(tmp, nxt_token.c_str());
+        char *token = strtok(tmp, "=");
+        if (string(token) == "-ISBN") {
+            if (ISBN != "") throw Error();
+            ISBN = string(strtok(nullptr, " "));
+            if (ISBN == "") throw Error();
+            strcpy(book.ISBN_, ISBN.c_str());
+        } else if (string(token) == "-name") {
+            if (book_name != "") throw Error();
+            book_name = string(strtok(nullptr, " "));
+            book_name = book_name.substr(1, book_name.length() - 2);  //
+            if (book_name == "") throw Error();
+            strcpy(book.book_name_, book_name.c_str());
+        } else if (string(token) == "-author") {
+            if (author != "") throw Error();
+            author = string(strtok(nullptr, " "));
+            author = author.substr(1, author.length() - 2);  //
+            if (author == "") throw Error();
+            strcpy(book.author_, author.c_str());
+        } else if (string(token) == "-keyword") {
+            if (keyword != "") throw Error();
+            keyword = string(strtok(nullptr, " "));
+            keyword = keyword.substr(1, keyword.length() - 2);  //
+            if (keyword == "") throw Error();
+            strcpy(book.keyword_, keyword.c_str());
+        } else if (string(token) == "-price") {
+            if (price != "") throw Error();
+            price = string(strtok(nullptr, " "));
+            if (price == "") throw Error();
+            book.price_ = atof(price.c_str());
+        }
+        nxt_token = line.nextToken();
     }
-    if (string(token) == "-name") {
-        if (book_name != "") throw Error();
-        book_name = string(strtok(nullptr, " "));
-        if (book_name == "") throw Error();
-        strcpy(book.book_name_, book_name.c_str());
-    }
-    if (string(token) == "-author") {
-        if (author != "") throw Error();
-        author = string(strtok(nullptr, " "));
-        if (author == "") throw Error();
-        strcpy(book.author_, author.c_str());
-    }
-    if (string(token) == "-keyword") {
-        if (keyword != "") throw Error();
-        keyword = string(strtok(nullptr, " "));
-        if (keyword == "") throw Error();
-        strcpy(book.keyword_, keyword.c_str());
-    }
-    book_info.WriteInfo(book, book.ISBN_);
+    book_info.ModifyInfo(book, book.index_, old_ISBN, book.ISBN_);
 }
 
-void Import(Book &book, int quantity, double total_cost) {
+void Import(Book &book, double total_cost, int quantity) {
     MainInfo<Book> book_info("book_info");
     book_info.DeleteInfo(book.ISBN_);
     book.quantity_ += quantity;
-    book_info.WriteInfo(book, book.ISBN_);
+    book_info.ModifyInfo(book, book.index_, book.ISBN_, book.ISBN_);
 }
