@@ -5,6 +5,7 @@ time_Limit = 30 # s
 import os
 import filecmp
 
+
 def init(folder):
     os.system('cp ' + folder + '/code ./')
     os.system('cp ' + folder + '/clean.sh ./')
@@ -127,10 +128,13 @@ def run_Robust():
     print('Your Robust Test Score is', sum / 5 * 2)
     return sum / 5 * 2
 
+os.chdir(os.path.split(__file__)[0])
+
 print('Input the folder of your program, which should contain an executable \'code\' and a unix-shell script clean.sh')
 
 folder = str(input())
 init(folder)
+
 
 Score = 0
 

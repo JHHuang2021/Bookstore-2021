@@ -57,9 +57,16 @@ bool Book::operator==(const Book &obj) const {
     if (strcmp(this->author_, "") != 0 &&
         strcmp(this->author_, obj.author_) != 0)
         return false;
-    if (strcmp(this->keyword_, "") != 0 &&
-        strstr(obj.keyword_, this->keyword_) == nullptr)
+    if (strcmp(this->keyword_, "") != 0) {
+        char tmp[61];
+        strcpy(tmp, obj.keyword_);
+        char *token = strtok(tmp, "|");
+        while (token != nullptr) {
+            if (strcmp(this->keyword_, token) == 0) return true;
+            token = strtok(nullptr, "|");
+        }
         return false;
+    }
     return true;
 }
 
@@ -147,7 +154,9 @@ void ModifyBook(Book &book, TokenScanner &line) {
         if (string(token) == "-ISBN") {
             if (ISBN != "") throw Error();
             ISBN = string(strtok(nullptr, " "));
-            if (ISBN == "") throw Error();
+            if (ISBN == "" || strcmp(ISBN.c_str(), book.ISBN_) == 0)
+                throw Error();
+            book_info.FindInfo(ISBN, 1);//to be modified
             strcpy(book.ISBN_, ISBN.c_str());
         } else if (string(token) == "-name") {
             if (book_name != "") throw Error();

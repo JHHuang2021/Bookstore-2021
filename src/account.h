@@ -9,7 +9,7 @@ class Account {
                        string new_password);
 
    private:
-    char user_id_[30], password_[30], user_name_[30];
+    char user_id_[31], password_[31], user_name_[31];
     int priority_ = 0;
 
    public:

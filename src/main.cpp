@@ -28,18 +28,16 @@ int main() {
     // (filename extension is `.a` in Linux and `.lib`
     // in Windows), the executable file can run without
     // any other file.
-    freopen("test.in", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.in", "r", stdin);
+    // freopen("test.out", "w", stdout);
     void process_line(TokenScanner & line);
     try {
         Account tmp("root", "", "sjtu", 7);
         account_info.WriteInfo(tmp, "root");
     } catch (Error &ex) {
     }
-
-    while (true) {
-        string line;
-        getline(cin, line);
+    string line;
+    while (getline(cin, line)) {
         if (line == "") continue;
         if (line == "exit" || line == "quit") break;
         TokenScanner buffer(line);

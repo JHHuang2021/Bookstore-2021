@@ -123,11 +123,12 @@ class MainInfo {
         key_index.DeleteNode(UllNode(key, *find.begin()));
     }
 
-    T FindInfo(string &key) {
+    T FindInfo(string &key, int index = 0) {
         Ull key_index(file_name_ + "_ull");
         set<int> find;
         key_index.FindNode(key, find);
-        if (find.empty()) throw Error();
+        if (index == 0 && find.empty()) throw Error();
+        if (index == 1 && !find.empty()) throw Error();
         T tmp;
         fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
         ffile.seekg(sizeof(int) + *find.begin() * sizeof(T));
