@@ -102,6 +102,7 @@ void Show(TokenScanner &line) {
         keyword = string(strtok(nullptr, " "));
         keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "") throw Error();
+        if (strstr(keyword.c_str(), "|") != nullptr) throw Error();
     }
     book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
     if (find.empty())

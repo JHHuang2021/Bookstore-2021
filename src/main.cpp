@@ -30,6 +30,8 @@ int main() {
     // any other file.
     // freopen("test.in", "r", stdin);
     // freopen("test.out", "w", stdout);
+    cin.tie(0);
+    cout.tie(0);
     void process_line(TokenScanner & line);
     try {
         Account tmp("root", "", "sjtu", 7);
