@@ -123,7 +123,7 @@ class MainInfo {
         key_index.DeleteNode(UllNode(key, *find.begin()));
     }
 
-    T FindInfo(string &key, int index = 0) {
+    T FindInfo(const string &key, int index = 0) {
         Ull key_index(file_name_ + "_ull");
         set<int> find;
         key_index.FindNode(key, find);
@@ -137,7 +137,7 @@ class MainInfo {
         return tmp;
     }
 
-    void FindInfo(T search, set<T> &findT) {
+    void FindInfo(const T search, set<T> &findT) {
         T tmp;
         int num;
         fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
@@ -160,7 +160,11 @@ class MainInfo {
     }
 
     void ModifyInfo(T &modify, int index, string old_key, string new_key) {
+        T tmp;
         fstream ffile(file_name_, fstream::out | fstream::in | fstream::binary);
+        ffile.seekg(sizeof(int) + index * sizeof(T));
+        ffile.read(reinterpret_cast<char *>(&tmp), sizeof(T));
+        modify(tmp);
         ffile.seekp(sizeof(int) + index * sizeof(T));
         ffile.write(reinterpret_cast<char *>(&modify), sizeof(T));
         ffile.close();

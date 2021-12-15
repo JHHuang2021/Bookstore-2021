@@ -16,6 +16,8 @@ Book::Book() {
     strcpy(this->book_name_, "");
     strcpy(this->author_, "");
     strcpy(this->keyword_, "");
+    this->price_ = -1;
+    this->quantity_ = -1;
 }
 
 Book::Book(string ISBN, string book_name, string author, string keyword,
@@ -75,7 +77,17 @@ bool Book::operator==(const Book &obj) const {
     return true;
 }
 
-void Show(TokenScanner &line) {
+void Book::operator()(const Book &obj) {
+    if (strcmp(this->book_name_, "") == 0)
+        strcpy(this->book_name_, obj.book_name_);
+    if (strcmp(this->author_, "") == 0) strcpy(this->author_, obj.author_);
+    if (strcmp(this->ISBN_, "") == 0) strcpy(this->ISBN_, obj.ISBN_);
+    if (strcmp(this->keyword_, "") == 0) strcpy(this->keyword_, obj.keyword_);
+    if (this->price_ == -1) this->price_ = obj.price_;
+    if (this->quantity_ == -1) this->quantity_ = obj.quantity_;
+}
+
+void Show(TokenScanner &line, int priority) {
     MainInfo<Book> book_info("book_info");
     set<Book> find;
     char tmp[61];
@@ -83,6 +95,7 @@ void Show(TokenScanner &line) {
     strcpy(tmp, line.nextToken().c_str());
     char *token = strtok(tmp, "=");
     if (string(token) == "finance") {
+        if (priority != 7) throw Error();
         int times = atoi(line.nextToken().c_str());
         Log log("log");
         log.ShowFinance(times);
@@ -139,6 +152,17 @@ void BuyBook(TokenScanner &line) {
 Book Select(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN = line.nextToken();
+    try {
+        return book_info.FindInfo(ISBN);
+    } catch (Error &ex) {
+        Book tmp(ISBN, "", "", "", book_info.GetNum());
+        book_info.WriteInfo(tmp, ISBN);
+        return tmp;
+    }
+}
+
+Book Select(const string &ISBN) {
+    MainInfo<Book> book_info("book_info");
     try {
         return book_info.FindInfo(ISBN);
     } catch (Error &ex) {

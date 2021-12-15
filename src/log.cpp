@@ -64,6 +64,10 @@ void Log::ShowFinance(int times) {
             in += bill;
     }
     ffile.close();
-    cout << "+ " << fixed << setprecision(2) << in << " "
-         << "- " << fixed << setprecision(2) << (-out) << "\n";
+    if (out < 0)
+        cout << "+ " << fixed << setprecision(2) << in << " "
+             << "- " << fixed << setprecision(2) << (-out) << "\n";
+    else
+        cout << "+ " << fixed << setprecision(2) << in << " "
+             << "- " << fixed << setprecision(2) << (out) << "\n";
 }

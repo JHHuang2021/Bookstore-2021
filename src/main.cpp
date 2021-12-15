@@ -70,6 +70,9 @@ void process_line(TokenScanner &line) {
     } else if (token == "logout") {
         if (user_stack.empty()) throw Error();
         user_stack.pop_back();
+        if (!user_stack.empty() && user_stack.rbegin()->second.GetISBN() != "")
+            user_stack.rbegin()->second =
+                Select(user_stack.rbegin()->second.GetISBN());
     } else if (token == "register") {
         string user_id, password, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
@@ -109,7 +112,7 @@ void process_line(TokenScanner &line) {
     } else if (token == "show") {
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() == 0) throw Error();
-        Show(line);
+        Show(line, user_stack.rbegin()->first.GetPriority());
     } else if (token == "buy") {
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() == 0) throw Error();
