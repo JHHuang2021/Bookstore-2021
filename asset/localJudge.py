@@ -138,11 +138,11 @@ init(folder)
 
 Score = 0
 
-Score += run_Basic()
-Score += run_Advanced()
+# Score += run_Basic()
+# Score += run_Advanced()
 Score += run_Complex()
 # Score += run_Insider()
-Score += run_Robust()
+# Score += run_Robust()
 
-cleanAll()
+# cleanAll()
 print('Your Total Score is', Score)

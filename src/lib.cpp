@@ -11,7 +11,12 @@
 #include "log.h"
 #include "parser.h"
 
-Book::Book() {}
+Book::Book() {
+    strcpy(this->ISBN_, "");
+    strcpy(this->book_name_, "");
+    strcpy(this->author_, "");
+    strcpy(this->keyword_, "");
+}
 
 Book::Book(string ISBN, string book_name, string author, string keyword,
            int index, int quantity, double price) {
@@ -156,7 +161,7 @@ void ModifyBook(Book &book, TokenScanner &line) {
             ISBN = string(strtok(nullptr, " "));
             if (ISBN == "" || strcmp(ISBN.c_str(), book.ISBN_) == 0)
                 throw Error();
-            book_info.FindInfo(ISBN, 1);//to be modified
+            book_info.FindInfo(ISBN, 1);  // to be modified
             strcpy(book.ISBN_, ISBN.c_str());
         } else if (string(token) == "-name") {
             if (book_name != "") throw Error();
