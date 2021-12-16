@@ -229,10 +229,10 @@
     exit
     
     # 账户系统指令
-    su [User-ID] ([Password])?
+    su [User-ID] ([Password])?//
     logout
     register [User-ID] [Password] [User-Name]
-    passwd [User-ID] ([Old-Password])? [New-Password]
+    passwd [User-ID] ([Old-Password])? [New-Password]//
     useradd [User-ID] [Password] [Priority] [User-Name]
     delete [User-ID]
     

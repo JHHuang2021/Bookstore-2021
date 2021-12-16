@@ -102,7 +102,9 @@ void process_line(TokenScanner &line) {
             priority = 0;
         else
             priority = user_stack.rbegin()->first.GetPriority();
-        if (user_stack.empty() || user_stack.rbegin()->first.GetPriority() != 7)
+        if (user_stack.empty() ||
+            user_stack.rbegin()->first.GetPriority() != 7 ||
+            new_password != "-1")
             Passwd(user_id, new_password, priority, old_password);
         else
             Passwd(user_id, old_password, priority, "");
