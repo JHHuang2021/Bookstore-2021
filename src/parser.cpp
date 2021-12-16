@@ -44,7 +44,8 @@ bool IfKeywordRepeated(const char *keywords) {
 //除不可见字符和英文双引号以外 Ascii 字符 -- 4
 //数字和 . -- 5
 bool IfInvaild(const char *content, int index, int max_length) {
-    if (strlen(content) > max_length) return false;
+    if (strlen(content) > max_length) return true;
+    if (strcmp(content, "-1") == 0) return false;
     if (index == 1) {
         for (int i = 0; i < strlen(content); i++)
             if (*(content + i) <= 47 ||
@@ -57,11 +58,13 @@ bool IfInvaild(const char *content, int index, int max_length) {
         return false;
     } else if (index == 3) {
         for (int i = 0; i < strlen(content); i++)
-            if (*(content + i) <= 47 || *(content + i) >= 58) return true;
+            if (*(content + i) <= 47 || *(content + i) >= 58) 
+            return true;
         return false;
     } else if (index == 4) {
         for (int i = 0; i < strlen(content); i++)
-            if (*(content + i) == '\"') return true;
+            if (*(content + i) == '\"')
+             return true;
         return false;
     } else if (index == 5) {
         int precision = -1;
@@ -75,10 +78,10 @@ bool IfInvaild(const char *content, int index, int max_length) {
             } else if (*(content + i) <= 47 || *(content + i) >= 58)
                 return true;
         }
-        if (precision != 2)
-            return true;
-        else
+        if (precision <= 2)
             return false;
+        else
+            return true;
     }
     return false;
 }

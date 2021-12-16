@@ -58,8 +58,11 @@ void process_line(TokenScanner &line) {
     if (token == "-1") return;
     if (token == "su") {
         Account tmp;
-        string user_name = line.nextToken(), password = line.nextToken();
-        tmp = account_info.FindInfo(user_name);
+        string user_id = line.nextToken(), password = line.nextToken();
+        if (IfInvaild(user_id.c_str(), 1, 30) ||
+            IfInvaild(password.c_str(), 1, 30))
+            throw Error();
+        tmp = account_info.FindInfo(user_id);
         if (password == "-1") {  // may have problems
             if (user_stack.empty()) throw Error();
             if (user_stack.rbegin()->first.GetPriority() <= tmp.GetPriority())
@@ -77,6 +80,9 @@ void process_line(TokenScanner &line) {
         string user_id, password, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         user_name = line.nextToken();
+        if (IfInvaild(user_id.c_str(), 1, 30) ||
+            IfInvaild(password.c_str(), 1, 30))
+            throw Error();
         if (line.nextToken() != "-1" || user_name == "-1") throw Error();
         Register(user_id, password, user_name);
     } else if (token == "passwd") {
@@ -84,6 +90,10 @@ void process_line(TokenScanner &line) {
         string user_id, old_password, new_password;
         user_id = line.nextToken(), old_password = line.nextToken(),
         new_password = line.nextToken();
+        if (IfInvaild(user_id.c_str(), 1, 30) ||
+            IfInvaild(old_password.c_str(), 1, 30) ||
+            IfInvaild(new_password.c_str(), 1, 30))
+            throw Error();
         int priority;
         if (user_stack.empty())
             priority = 0;
@@ -98,10 +108,15 @@ void process_line(TokenScanner &line) {
         string user_id, password, priority, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
+        if (IfInvaild(user_id.c_str(), 1, 30) ||
+            IfInvaild(password.c_str(), 1, 30))
+            throw Error();
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         int priorityy = atoi(priority.c_str());
-        if (priorityy != 1 && priorityy != 3) throw Error();
+        if ((priorityy != 1 && priorityy != 3) ||
+            priorityy >= user_stack.rbegin()->first.GetPriority())
+            throw Error();
         user_stack.rbegin()->first.UserAdd(user_id, password, priorityy,
                                            user_name);
     } else if (token == "delete") {
@@ -110,7 +125,7 @@ void process_line(TokenScanner &line) {
         user_id = line.nextToken();
         for (auto iter : user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
-        Delete(user_id);
+        Delete(user_id);  //
     } else if (token == "show") {
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() == 0) throw Error();
@@ -134,6 +149,9 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string quantity = line.nextToken(), total_cost = line.nextToken();
+        if (IfInvaild(quantity.c_str(), 3, 10) ||
+            IfInvaild(total_cost.c_str(), 5, 13))
+            throw Error();
         Import(user_stack.rbegin()->second, atoi(quantity.c_str()),
                atof(total_cost.c_str()));
         Log log("log");

@@ -97,25 +97,26 @@ void Show(TokenScanner &line, int priority) {
     char *token = strtok(tmp, "=");
     if (string(token) == "finance") {
         if (priority != 7) throw Error();
-        int times = atoi(line.nextToken().c_str());
+        int times = atoi(line.nextToken().c_str());//
         Log log("log");
         log.ShowFinance(times);
         return;
     } else if (string(token) == "-ISBN") {
         ISBN = string(strtok(nullptr, " "));
-        if (ISBN == "") throw Error();
+        if (ISBN == "" || IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     } else if (string(token) == "-name") {
         book_name = string(strtok(nullptr, " "));
         book_name = book_name.substr(1, book_name.length() - 2);  //
-        if (book_name == "") throw Error();
+        if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
+            throw Error();
     } else if (string(token) == "-author") {
         author = string(strtok(nullptr, " "));
         author = author.substr(1, author.length() - 2);  //
-        if (author == "") throw Error();
+        if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
     } else if (string(token) == "-keyword") {
         keyword = string(strtok(nullptr, " "));
         keyword = keyword.substr(1, keyword.length() - 2);  //
-        if (keyword == "") throw Error();
+        if (keyword == "" || IfInvaild(keyword.c_str(), 4, 60)) throw Error();
         if (strstr(keyword.c_str(), "|") != nullptr) throw Error();
     }
     book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
@@ -138,6 +139,7 @@ void BuyBook(TokenScanner &line) {
     string ISBN, quantity;
     ISBN = line.nextToken(), quantity = line.nextToken();
     Book tmp = book_info.FindInfo(ISBN);
+    if (IfInvaild(quantity.c_str(), 3, 10)) throw Error();
     int quantity_int = atoi(quantity.c_str());
     if (tmp.quantity_ < quantity_int)
         throw Error();
@@ -153,6 +155,7 @@ void BuyBook(TokenScanner &line) {
 Book Select(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN = line.nextToken();
+    if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     try {
         return book_info.FindInfo(ISBN);
     } catch (Error &ex) {
@@ -182,31 +185,34 @@ void ModifyBook(Book &book, TokenScanner &line) {
             if (ISBN == "" || strcmp(ISBN.c_str(), book.ISBN_) == 0)
                 throw Error();
             book_info.FindInfo(ISBN, 1);  // to be modified
+            if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
             strcpy(book.ISBN_, ISBN.c_str());
         } else if (string(token) == "-name") {
             if (book_name != "") throw Error();
             book_name = string(strtok(nullptr, " "));
             book_name = book_name.substr(1, book_name.length() - 2);  //
-            if (book_name == "") throw Error();
+            if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
+                throw Error();
             strcpy(book.book_name_, book_name.c_str());
         } else if (string(token) == "-author") {
             if (author != "") throw Error();
             author = string(strtok(nullptr, " "));
             author = author.substr(1, author.length() - 2);  //
-            if (author == "") throw Error();
+            if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
             strcpy(book.author_, author.c_str());
         } else if (string(token) == "-keyword") {
             if (keyword != "") throw Error();
             keyword = string(strtok(nullptr, " "));
             keyword = keyword.substr(1, keyword.length() - 2);  //
-            if (keyword == "" || IfKeywordRepeated(keyword.c_str()))
+            if (keyword == "" || IfKeywordRepeated(keyword.c_str()) ||
+                IfInvaild(keyword.c_str(), 4, 60))
                 // if (keyword == "")
                 throw Error();
             strcpy(book.keyword_, keyword.c_str());
         } else if (string(token) == "-price") {
             if (price != "") throw Error();
             price = string(strtok(nullptr, " "));
-            if (price == "") throw Error();
+            if (price == "" || IfInvaild(price.c_str(), 5, 13)) throw Error();
             book.price_ = atof(price.c_str());
         }
         nxt_token = line.nextToken();
