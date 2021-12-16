@@ -21,4 +21,4 @@ class TokenScanner {
 
 bool IfKeywordRepeated(const char *keywords);
 
-bool IfInvaild(const char *content, int index);
+bool IfInvaild(const char *content, int index, int length);

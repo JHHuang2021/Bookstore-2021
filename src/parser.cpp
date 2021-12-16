@@ -38,4 +38,9 @@ bool IfKeywordRepeated(const char *keywords) {
     return false;
 }
 
-bool IfInvaild(const char *content, int index) {}
+//数字，字母，下划线 -- 1
+//除不可见字符以外 Ascii 字符 -- 2
+//数字 -- 3
+//除不可见字符和英文双引号以外 Ascii 字符 -- 4
+//数字和 . -- 5
+bool IfInvaild(const char *content, int index, int length) {}
