@@ -60,7 +60,7 @@ void process_line(TokenScanner &line) {
         Account tmp;
         string user_name = line.nextToken(), password = line.nextToken();
         tmp = account_info.FindInfo(user_name);
-        if (password == "") {
+        if (password == "-1") {  // may have problems
             if (user_stack.empty()) throw Error();
             if (user_stack.rbegin()->first.GetPriority() <= tmp.GetPriority())
                 throw Error();
@@ -72,7 +72,7 @@ void process_line(TokenScanner &line) {
         user_stack.pop_back();
         if (!user_stack.empty() && user_stack.rbegin()->second.GetISBN() != "")
             user_stack.rbegin()->second =
-                Select(user_stack.rbegin()->second.GetISBN());
+                Select(user_stack.rbegin()->second.GetIndex());
     } else if (token == "register") {
         string user_id, password, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
@@ -100,8 +100,10 @@ void process_line(TokenScanner &line) {
         priority = line.nextToken(), user_name = line.nextToken();
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
-        user_stack.rbegin()->first.UserAdd(user_id, password,
-                                           atoi(priority.c_str()), user_name);
+        int priorityy = atoi(priority.c_str());
+        if (priorityy != 1 && priorityy != 3) throw Error();
+        user_stack.rbegin()->first.UserAdd(user_id, password, priorityy,
+                                           user_name);
     } else if (token == "delete") {
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string user_id;

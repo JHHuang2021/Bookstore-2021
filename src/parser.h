@@ -18,3 +18,7 @@ class TokenScanner {
     istringstream buffer;
 };
 #endif
+
+bool IfKeywordRepeated(const char *keywords);
+
+bool IfInvaild(const char *content, int index);

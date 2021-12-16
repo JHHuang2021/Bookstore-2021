@@ -37,6 +37,7 @@ const string Book::GetISBN() const { return string(this->ISBN_); }
 const string Book::GetBookName() const { return string(this->book_name_); }
 const string Book::GetAuthor() const { return string(this->author_); }
 const string Book::GetKeyword() const { return string(this->keyword_); };
+const int Book::GetIndex() const { return this->index_; }
 const int Book::GetQuantity() const { return this->quantity_; }
 const double Book::GetPrice() const { return this->price_; }
 
@@ -161,15 +162,9 @@ Book Select(TokenScanner &line) {
     }
 }
 
-Book Select(const string &ISBN) {
+Book Select(const int index) {
     MainInfo<Book> book_info("book_info");
-    try {
-        return book_info.FindInfo(ISBN);
-    } catch (Error &ex) {
-        Book tmp(ISBN, "", "", "", book_info.GetNum());
-        book_info.WriteInfo(tmp, ISBN);
-        return tmp;
-    }
+    return book_info.GetInfo(index);
 }
 
 void ModifyBook(Book &book, TokenScanner &line) {
@@ -204,7 +199,9 @@ void ModifyBook(Book &book, TokenScanner &line) {
             if (keyword != "") throw Error();
             keyword = string(strtok(nullptr, " "));
             keyword = keyword.substr(1, keyword.length() - 2);  //
-            if (keyword == "") throw Error();
+            if (keyword == "" || IfKeywordRepeated(keyword.c_str()))
+                // if (keyword == "")
+                throw Error();
             strcpy(book.keyword_, keyword.c_str());
         } else if (string(token) == "-price") {
             if (price != "") throw Error();

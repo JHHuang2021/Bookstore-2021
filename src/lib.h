@@ -34,6 +34,7 @@ class Book {
     const string GetBookName() const;
     const string GetAuthor() const;
     const string GetKeyword() const;
+    const int GetIndex() const;
     const int GetQuantity() const;
     const double GetPrice() const;
 };
@@ -41,7 +42,7 @@ class Book {
 void Show(TokenScanner &line, int index);
 void BuyBook(TokenScanner &line);
 Book Select(TokenScanner &line);
-Book Select(const string &ISBN);
+Book Select(const int index);
 void ModifyBook(Book &book, TokenScanner &line);
 void Import(Book &book, int quantity, double total_cost);
 

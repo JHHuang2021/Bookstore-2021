@@ -123,6 +123,16 @@ class MainInfo {
         key_index.DeleteNode(UllNode(key, *find.begin()));
     }
 
+    T GetInfo(const int index) {
+        Ull key_index(file_name_ + "_ull");
+        T tmp;
+        fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+        ffile.seekg(sizeof(int) + index * sizeof(T));
+        ffile.read(reinterpret_cast<char *>(&tmp), sizeof(T));
+        ffile.close();
+        return tmp;
+    }
+
     T FindInfo(const string &key, int index = 0) {
         Ull key_index(file_name_ + "_ull");
         set<int> find;
