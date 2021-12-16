@@ -48,6 +48,11 @@ void Log::ShowFinance(int times) {
     fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
+    // if (num == 0) {
+    //     cout << "+ 0.00 - 0.00\n";
+    //     ffile.close();
+    //     return;
+    // }
     if (times > num)
         throw Error();
     else if (times == -1)

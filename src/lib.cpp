@@ -123,7 +123,8 @@ void Show(TokenScanner &line, int priority) {
         keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "" || IfInvaild(keyword.c_str(), 4, 60)) throw Error();
         if (strstr(keyword.c_str(), "|") != nullptr) throw Error();
-    }
+    } else if (string(token) != "-1")
+        throw Error();
     book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
     if (find.empty())
         cout << "\n";
