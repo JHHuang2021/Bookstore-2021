@@ -78,10 +78,10 @@ bool IfInvaild(const char *content, int index, int max_length) {
             } else if (*(content + i) <= 47 || *(content + i) >= 58)
                 return true;
         }
-        if (precision <= 2)
-            return false;
-        else
-            return true;
+        // if (precision <= 2)
+        //     return false;
+        // else
+        //     return true;
     }
     return false;
 }

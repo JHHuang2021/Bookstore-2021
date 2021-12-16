@@ -59,6 +59,7 @@ void process_line(TokenScanner &line) {
     if (token == "su") {
         Account tmp;
         string user_id = line.nextToken(), password = line.nextToken();
+        if (line.nextToken() != "-1") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
@@ -71,6 +72,7 @@ void process_line(TokenScanner &line) {
             throw Error();
         user_stack.push_back(mkpr(tmp, Book()));
     } else if (token == "logout") {
+        if (line.nextToken() != "-1") throw Error();
         if (user_stack.empty()) throw Error();
         user_stack.pop_back();
         if (!user_stack.empty() && user_stack.rbegin()->second.GetISBN() != "")
@@ -90,6 +92,7 @@ void process_line(TokenScanner &line) {
         string user_id, old_password, new_password;
         user_id = line.nextToken(), old_password = line.nextToken(),
         new_password = line.nextToken();
+        if (line.nextToken() != "-1") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(old_password.c_str(), 1, 30) ||
             IfInvaild(new_password.c_str(), 1, 30))
@@ -108,6 +111,7 @@ void process_line(TokenScanner &line) {
         string user_id, password, priority, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
+        if (line.nextToken() != "-1") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
@@ -123,6 +127,7 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string user_id;
         user_id = line.nextToken();
+        if (line.nextToken() != "-1") throw Error();
         for (auto iter : user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
         Delete(user_id);  //
@@ -149,6 +154,7 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string quantity = line.nextToken(), total_cost = line.nextToken();
+        if (line.nextToken() != "-1") throw Error();
         if (IfInvaild(quantity.c_str(), 3, 10) ||
             IfInvaild(total_cost.c_str(), 5, 13))
             throw Error();

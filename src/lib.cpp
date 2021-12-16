@@ -97,23 +97,28 @@ void Show(TokenScanner &line, int priority) {
     char *token = strtok(tmp, "=");
     if (string(token) == "finance") {
         if (priority != 7) throw Error();
-        int times = atoi(line.nextToken().c_str());//
+        int times = atoi(line.nextToken().c_str());  //
+        if (line.nextToken() != "-1") throw Error();
         Log log("log");
         log.ShowFinance(times);
         return;
     } else if (string(token) == "-ISBN") {
+        if (line.nextToken() != "-1") throw Error();
         ISBN = string(strtok(nullptr, " "));
         if (ISBN == "" || IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     } else if (string(token) == "-name") {
+        if (line.nextToken() != "-1") throw Error();
         book_name = string(strtok(nullptr, " "));
         book_name = book_name.substr(1, book_name.length() - 2);  //
         if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
             throw Error();
     } else if (string(token) == "-author") {
+        if (line.nextToken() != "-1") throw Error();
         author = string(strtok(nullptr, " "));
         author = author.substr(1, author.length() - 2);  //
         if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
     } else if (string(token) == "-keyword") {
+        if (line.nextToken() != "-1") throw Error();
         keyword = string(strtok(nullptr, " "));
         keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "" || IfInvaild(keyword.c_str(), 4, 60)) throw Error();
@@ -138,6 +143,7 @@ void BuyBook(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN, quantity;
     ISBN = line.nextToken(), quantity = line.nextToken();
+    if (line.nextToken() != "-1") throw Error();
     Book tmp = book_info.FindInfo(ISBN);
     if (IfInvaild(quantity.c_str(), 3, 10)) throw Error();
     int quantity_int = atoi(quantity.c_str());
@@ -155,6 +161,7 @@ void BuyBook(TokenScanner &line) {
 Book Select(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN = line.nextToken();
+    if (line.nextToken() != "-1") throw Error();
     if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     try {
         return book_info.FindInfo(ISBN);
@@ -214,7 +221,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
             price = string(strtok(nullptr, " "));
             if (price == "" || IfInvaild(price.c_str(), 5, 13)) throw Error();
             book.price_ = atof(price.c_str());
-        }
+        } else
+            throw Error();
         nxt_token = line.nextToken();
     }
     book_info.ModifyInfo(book, book.index_, old_ISBN, book.ISBN_);
