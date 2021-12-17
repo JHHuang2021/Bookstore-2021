@@ -13,23 +13,10 @@
 #include "parser.h"
 
 #define mkpr pair<Account, Book>
-// may use struct
 vector<mkpr> user_stack;
 MainInfo<Account> account_info("account_info");
 
 int main() {
-    // If you are using dynamic-link library, the DLL
-    // file (filename extension is `.so` in Linux and
-    // `.dll` in Windows) must be in a location that
-    // the executable file can directly access(that is,
-    // under the same folder or under system PATH),
-    // otherwise it cannot run.
-    // But if you are using the statically-linked library
-    // (filename extension is `.a` in Linux and `.lib`
-    // in Windows), the executable file can run without
-    // any other file.
-    // freopen("test.in", "r", stdin);
-    // freopen("test.out", "w", stdout);
     cin.tie(0);
     cout.tie(0);
     void process_line(TokenScanner & line);
