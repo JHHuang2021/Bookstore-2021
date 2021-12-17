@@ -113,7 +113,7 @@ void process_line(TokenScanner &line) {
         string user_id, password, priority, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "-1"||user_name=="-1") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
@@ -156,7 +156,8 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string quantity = line.nextToken(), total_cost = line.nextToken();
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "-1" || quantity == "-1" || total_cost == "-1")
+            throw Error();
         if (IfInvaild(quantity.c_str(), 3, 10) ||
             IfInvaild(total_cost.c_str(), 5, 13))
             throw Error();

@@ -174,7 +174,7 @@ void BuyBook(TokenScanner &line) {
 Book Select(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN = line.nextToken();
-    if (line.nextToken() != "-1") throw Error();
+    if (line.nextToken() != "-1" || ISBN == "-1") throw Error();
     if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     try {
         return book_info.FindInfo(ISBN);
@@ -196,6 +196,7 @@ void ModifyBook(Book &book, TokenScanner &line) {
     string old_ISBN = book.ISBN_;
     string ISBN, book_name, author, keyword, price;
     string nxt_token = line.nextToken();
+    if (nxt_token == "-1") throw Error();
     while (nxt_token != "-1") {
         strcpy(tmp, nxt_token.c_str());
         char *token = strtok(tmp, "=");
