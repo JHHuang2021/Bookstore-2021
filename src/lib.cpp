@@ -101,8 +101,11 @@ void Show(TokenScanner &line, int priority) {
         int times;
         if (tim == "*-4980(2jofw0.39ac2s@&")
             times = -1;  //
-        else
+        else {
+            if (tim.length() == 10 && tim > "2147483647")
+                throw Error();
             times = atoi(tim.c_str());
+        }
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         Log log("log");
         log.ShowFinance(times);
@@ -166,6 +169,7 @@ void BuyBook(TokenScanner &line) {
         throw Error();
     Book tmp = book_info.FindInfo(ISBN);
     if (IfInvaild(quantity.c_str(), 3, 10)) throw Error();
+    if (quantity.length() == 10 && quantity > "2147483647") throw Error();
     int quantity_int = atoi(quantity.c_str());
     if (tmp.quantity_ < quantity_int)
         throw Error();

@@ -85,7 +85,9 @@ void process_line(TokenScanner &line) {
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" || user_name == "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
+            user_name == "*-4980(2jofw0.39ac2s@&")
+            throw Error();
         Register(user_id, password, user_name);
     } else if (token == "passwd") {
         //`passwd [User-ID] ([Old-Password])? [New-Password]`
@@ -113,7 +115,9 @@ void process_line(TokenScanner &line) {
         string user_id, password, priority, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&"||user_name=="*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
+            user_name == "*-4980(2jofw0.39ac2s@&" || priority.length() != 1)
+            throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
@@ -156,11 +160,14 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string quantity = line.nextToken(), total_cost = line.nextToken();
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" || quantity == "*-4980(2jofw0.39ac2s@&" || total_cost == "*-4980(2jofw0.39ac2s@&")
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
+            quantity == "*-4980(2jofw0.39ac2s@&" ||
+            total_cost == "*-4980(2jofw0.39ac2s@&")
             throw Error();
         if (IfInvaild(quantity.c_str(), 3, 10) ||
             IfInvaild(total_cost.c_str(), 5, 13))
             throw Error();
+        if (quantity.length() == 10 && quantity > "2147483647") throw Error();
         Import(user_stack.rbegin()->second, atoi(quantity.c_str()),
                atof(total_cost.c_str()));
         Log log("log");
