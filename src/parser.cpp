@@ -87,10 +87,10 @@ bool IfInvaild(const char *content, int index, int max_length) {
                 return true;
         }
         
-        if (precision <= 2)
-            return false;
-        else
-            return true;
+        // if (precision <= 2)
+        //     return false;
+        // else
+        //     return true;
     }
     return false;
 }
