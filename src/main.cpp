@@ -41,7 +41,7 @@ int main() {
     string line;
     while (getline(cin, line)) {
         if (line == "") continue;
-        if (line.length() > 1024) throw Error();
+        // if (line.length() > 1024) throw Error();
         if (line == "exit" || line == "quit") break;
         TokenScanner buffer(line);
         try {
