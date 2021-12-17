@@ -155,7 +155,8 @@ void BuyBook(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN, quantity;
     ISBN = line.nextToken(), quantity = line.nextToken();
-    if (line.nextToken() != "-1") throw Error();
+    if (line.nextToken() != "-1" || ISBN == "-1" || quantity == "-1")
+        throw Error();
     Book tmp = book_info.FindInfo(ISBN);
     if (IfInvaild(quantity.c_str(), 3, 10)) throw Error();
     int quantity_int = atoi(quantity.c_str());
