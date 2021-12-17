@@ -17,7 +17,7 @@ string TokenScanner::nextToken() {
     if (token != "")
         return token;
     else
-        return "-1";
+        return "*-4980(2jofw0.39ac2s@&";
 }
 
 bool IfKeywordRepeated(const char *keywords) {
@@ -45,7 +45,7 @@ bool IfKeywordRepeated(const char *keywords) {
 //Êý×ÖºÍ . -- 5
 bool IfInvaild(const char *content, int index, int max_length) {
     if (strlen(content) > max_length) return true;
-    if (strcmp(content, "-1") == 0) return false;
+    if (strcmp(content, "*-4980(2jofw0.39ac2s@&") == 0) return false;
     if (index == 1) {
         for (int i = 0; i < strlen(content); i++)
             if (*(content + i) <= 47 ||

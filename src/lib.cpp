@@ -97,19 +97,24 @@ void Show(TokenScanner &line, int priority) {
     char *token = strtok(tmp, "=");
     if (string(token) == "finance") {
         if (priority != 7) throw Error();
-        int times = atoi(line.nextToken().c_str());  //
-        if (line.nextToken() != "-1") throw Error();
+        string tim = line.nextToken().c_str();
+        int times;
+        if (tim == "*-4980(2jofw0.39ac2s@&")
+            times = -1;  //
+        else
+            times = atoi(tim.c_str());
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         Log log("log");
         log.ShowFinance(times);
         return;
     } else if (string(token) == "-ISBN") {
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr) throw Error();
         ISBN = string(token);
         if (ISBN == "" || IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     } else if (string(token) == "-name") {
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr) throw Error();
         book_name = string(token);
@@ -118,7 +123,7 @@ void Show(TokenScanner &line, int priority) {
         if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
             throw Error();
     } else if (string(token) == "-author") {
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr) throw Error();
         author = string(token);
@@ -126,7 +131,7 @@ void Show(TokenScanner &line, int priority) {
         author = author.substr(1, author.length() - 2);  //
         if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
     } else if (string(token) == "-keyword") {
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr) throw Error();
         keyword = string(token);
@@ -134,7 +139,7 @@ void Show(TokenScanner &line, int priority) {
         keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "" || IfInvaild(keyword.c_str(), 4, 60)) throw Error();
         if (strstr(keyword.c_str(), "|") != nullptr) throw Error();
-    } else if (string(token) != "-1")
+    } else if (string(token) != "*-4980(2jofw0.39ac2s@&")
         throw Error();
     book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
     if (find.empty())
@@ -155,7 +160,9 @@ void BuyBook(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN, quantity;
     ISBN = line.nextToken(), quantity = line.nextToken();
-    if (line.nextToken() != "-1" || ISBN == "-1" || quantity == "-1")
+    if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
+        ISBN == "*-4980(2jofw0.39ac2s@&" ||
+        quantity == "*-4980(2jofw0.39ac2s@&")
         throw Error();
     Book tmp = book_info.FindInfo(ISBN);
     if (IfInvaild(quantity.c_str(), 3, 10)) throw Error();
@@ -174,7 +181,9 @@ void BuyBook(TokenScanner &line) {
 Book Select(TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN = line.nextToken();
-    if (line.nextToken() != "-1" || ISBN == "-1") throw Error();
+    if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
+        ISBN == "*-4980(2jofw0.39ac2s@&")
+        throw Error();
     if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     try {
         return book_info.FindInfo(ISBN);
@@ -196,8 +205,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
     string old_ISBN = book.ISBN_;
     string ISBN, book_name, author, keyword, price;
     string nxt_token = line.nextToken();
-    if (nxt_token == "-1") throw Error();
-    while (nxt_token != "-1") {
+    if (nxt_token == "*-4980(2jofw0.39ac2s@&") throw Error();
+    while (nxt_token != "*-4980(2jofw0.39ac2s@&") {
         strcpy(tmp, nxt_token.c_str());
         char *token = strtok(tmp, "=");
         if (string(token) == "-ISBN") {

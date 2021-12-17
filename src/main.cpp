@@ -55,16 +55,16 @@ int main() {
 void process_line(TokenScanner &line) {
     string token;
     token = line.nextToken();
-    if (token == "-1") return;
+    if (token == "*-4980(2jofw0.39ac2s@&") return;
     if (token == "su") {
         Account tmp;
         string user_id = line.nextToken(), password = line.nextToken();
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
         tmp = account_info.FindInfo(user_id);
-        if (password == "-1") {  // may have problems
+        if (password == "*-4980(2jofw0.39ac2s@&") {  // may have problems
             if (user_stack.empty()) throw Error();
             if (user_stack.rbegin()->first.GetPriority() <= tmp.GetPriority())
                 throw Error();
@@ -72,7 +72,7 @@ void process_line(TokenScanner &line) {
             throw Error();
         user_stack.push_back(mkpr(tmp, Book()));
     } else if (token == "logout") {
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         if (user_stack.empty()) throw Error();
         user_stack.pop_back();
         if (!user_stack.empty() && user_stack.rbegin()->second.GetISBN() != "")
@@ -85,14 +85,14 @@ void process_line(TokenScanner &line) {
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
-        if (line.nextToken() != "-1" || user_name == "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" || user_name == "*-4980(2jofw0.39ac2s@&") throw Error();
         Register(user_id, password, user_name);
     } else if (token == "passwd") {
         //`passwd [User-ID] ([Old-Password])? [New-Password]`
         string user_id, old_password, new_password;
         user_id = line.nextToken(), old_password = line.nextToken(),
         new_password = line.nextToken();
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(old_password.c_str(), 1, 30) ||
             IfInvaild(new_password.c_str(), 1, 30))
@@ -104,7 +104,7 @@ void process_line(TokenScanner &line) {
             priority = user_stack.rbegin()->first.GetPriority();
         if (user_stack.empty() ||
             user_stack.rbegin()->first.GetPriority() != 7 ||
-            new_password != "-1")
+            new_password != "*-4980(2jofw0.39ac2s@&")
             Passwd(user_id, new_password, priority, old_password);
         else
             Passwd(user_id, old_password, priority, "");
@@ -113,7 +113,7 @@ void process_line(TokenScanner &line) {
         string user_id, password, priority, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
-        if (line.nextToken() != "-1"||user_name=="-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&"||user_name=="*-4980(2jofw0.39ac2s@&") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
             throw Error();
@@ -129,7 +129,7 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string user_id;
         user_id = line.nextToken();
-        if (line.nextToken() != "-1") throw Error();
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         for (auto iter : user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
         Delete(user_id);  //
@@ -156,7 +156,7 @@ void process_line(TokenScanner &line) {
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
         string quantity = line.nextToken(), total_cost = line.nextToken();
-        if (line.nextToken() != "-1" || quantity == "-1" || total_cost == "-1")
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" || quantity == "*-4980(2jofw0.39ac2s@&" || total_cost == "*-4980(2jofw0.39ac2s@&")
             throw Error();
         if (IfInvaild(quantity.c_str(), 3, 10) ||
             IfInvaild(total_cost.c_str(), 5, 13))
