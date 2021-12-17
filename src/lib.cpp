@@ -102,10 +102,11 @@ void Show(TokenScanner &line, int priority) {
         int times;
         if (tim == "*-4980(2jofw0.39ac2s@&")
             times = -1;  //
-        else {
-            if (tim.length() == 10 && tim > "2147483647") throw Error();
+        else if (IfInvaild(tim.c_str(), 3, 10) ||
+                 (tim.length() == 10 && tim > "2147483647"))
+            throw Error();
+        else
             times = atoi(tim.c_str());
-        }
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         Log log("log");
         log.ShowFinance(times);
