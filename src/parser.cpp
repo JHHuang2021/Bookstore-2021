@@ -67,9 +67,9 @@ bool IfInvaild(const char *content, int index, int max_length) {
     } else if (index == 2) {
         return false;
     } else if (index == 3) {
-        for (int i = 0; i < strlen(content); i++)
-            if (*(content + i) <= 47 || *(content + i) >= 58) return true;
-        return false;
+        // for (int i = 0; i < strlen(content); i++)
+        //     if (*(content + i) <= 47 || *(content + i) >= 58) return true;
+        // return false;
     } else if (index == 4) {
         for (int i = 0; i < strlen(content); i++)
             if (*(content + i) == '\"') return true;
