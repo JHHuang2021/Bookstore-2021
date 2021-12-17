@@ -104,22 +104,33 @@ void Show(TokenScanner &line, int priority) {
         return;
     } else if (string(token) == "-ISBN") {
         if (line.nextToken() != "-1") throw Error();
-        ISBN = string(strtok(nullptr, " "));
+        token = strtok(nullptr, " ");
+        if (token == nullptr) throw Error();
+        ISBN = string(token);
         if (ISBN == "" || IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     } else if (string(token) == "-name") {
         if (line.nextToken() != "-1") throw Error();
-        book_name = string(strtok(nullptr, " "));
+        token = strtok(nullptr, " ");
+        if (token == nullptr) throw Error();
+        book_name = string(token);
+        // book_name = string(strtok(nullptr, " "));
         book_name = book_name.substr(1, book_name.length() - 2);  //
         if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
             throw Error();
     } else if (string(token) == "-author") {
         if (line.nextToken() != "-1") throw Error();
-        author = string(strtok(nullptr, " "));
+        token = strtok(nullptr, " ");
+        if (token == nullptr) throw Error();
+        author = string(token);
+        // author = string(strtok(nullptr, " "));
         author = author.substr(1, author.length() - 2);  //
         if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
     } else if (string(token) == "-keyword") {
         if (line.nextToken() != "-1") throw Error();
-        keyword = string(strtok(nullptr, " "));
+        token = strtok(nullptr, " ");
+        if (token == nullptr) throw Error();
+        keyword = string(token);
+        // keyword = string(strtok(nullptr, " "));
         keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "" || IfInvaild(keyword.c_str(), 4, 60)) throw Error();
         if (strstr(keyword.c_str(), "|") != nullptr) throw Error();
@@ -189,7 +200,9 @@ void ModifyBook(Book &book, TokenScanner &line) {
         char *token = strtok(tmp, "=");
         if (string(token) == "-ISBN") {
             if (ISBN != "") throw Error();
-            ISBN = string(strtok(nullptr, " "));
+            token = strtok(nullptr, " ");
+            if (token == nullptr) throw Error();
+            ISBN = string(token);
             if (ISBN == "" || strcmp(ISBN.c_str(), book.ISBN_) == 0)
                 throw Error();
             book_info.FindInfo(ISBN, 1);  // to be modified
@@ -197,20 +210,29 @@ void ModifyBook(Book &book, TokenScanner &line) {
             strcpy(book.ISBN_, ISBN.c_str());
         } else if (string(token) == "-name") {
             if (book_name != "") throw Error();
-            book_name = string(strtok(nullptr, " "));
+            token = strtok(nullptr, " ");
+            if (token == nullptr) throw Error();
+            book_name = string(token);
+            // book_name = string(strtok(nullptr, " "));
             book_name = book_name.substr(1, book_name.length() - 2);  //
             if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
                 throw Error();
             strcpy(book.book_name_, book_name.c_str());
         } else if (string(token) == "-author") {
             if (author != "") throw Error();
-            author = string(strtok(nullptr, " "));
+            token = strtok(nullptr, " ");
+            if (token == nullptr) throw Error();
+            author = string(token);
+            // author = string(strtok(nullptr, " "));
             author = author.substr(1, author.length() - 2);  //
             if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
             strcpy(book.author_, author.c_str());
         } else if (string(token) == "-keyword") {
             if (keyword != "") throw Error();
-            keyword = string(strtok(nullptr, " "));
+            token = strtok(nullptr, " ");
+            if (token == nullptr) throw Error();
+            keyword = string(token);
+            // keyword = string(strtok(nullptr, " "));
             keyword = keyword.substr(1, keyword.length() - 2);  //
             if (keyword == "" || IfKeywordRepeated(keyword.c_str()) ||
                 IfInvaild(keyword.c_str(), 4, 60))
@@ -219,7 +241,10 @@ void ModifyBook(Book &book, TokenScanner &line) {
             strcpy(book.keyword_, keyword.c_str());
         } else if (string(token) == "-price") {
             if (price != "") throw Error();
-            price = string(strtok(nullptr, " "));
+            token = strtok(nullptr, " ");
+            if (token == nullptr) throw Error();
+            price = string(token);
+            // price = string(strtok(nullptr, " "));
             if (price == "" || IfInvaild(price.c_str(), 5, 13)) throw Error();
             book.price_ = atof(price.c_str());
         } else
