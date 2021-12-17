@@ -67,25 +67,26 @@ bool IfInvaild(const char *content, int index, int max_length) {
     } else if (index == 2) {
         return false;
     } else if (index == 3) {
-        // for (int i = 0; i < strlen(content); i++)
-        //     if (*(content + i) <= 47 || *(content + i) >= 58) return true;
-        // return false;
+        for (int i = 0; i < strlen(content); i++)
+            if (*(content + i) <= 47 || *(content + i) >= 58) return true;
+        return false;
     } else if (index == 4) {
         for (int i = 0; i < strlen(content); i++)
             if (*(content + i) == '\"') return true;
         return false;
     } else if (index == 5) {
-        int precision = -1;
-        for (int i = 0; i < strlen(content); i++) {
-            if (precision != -1) precision++;
-            if (*(content + i) == '.') {
-                if (precision == -1)
-                    precision++;
-                else
-                    return true;
-            } else if (*(content + i) <= 47 || *(content + i) >= 58)
-                return true;
-        }
+        // int precision = -1;
+        // for (int i = 0; i < strlen(content); i++) {
+        //     if (precision != -1) precision++;
+        //     if (*(content + i) == '.') {
+        //         if (precision == -1)
+        //             precision++;
+        //         else
+        //             return true;
+        //     } else if (*(content + i) <= 47 || *(content + i) >= 58)
+        //         return true;
+        // }
+
         // if (precision <= 2)
         //     return false;
         // else
