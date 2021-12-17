@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -42,10 +41,10 @@ int main() {
     string line;
     while (getline(cin, line)) {
         if (line == "") continue;
-        if (strlen(line.c_str()) > 1024) throw Error();
         if (line == "exit" || line == "quit") break;
         TokenScanner buffer(line);
         try {
+            if (line.length() > 1024) throw Error();
             process_line(buffer);
         } catch (Error &ex) {
             cout << ex.what();
