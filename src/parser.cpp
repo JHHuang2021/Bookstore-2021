@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 
+#include "error.h"
+
 TokenScanner::TokenScanner() {}
 
 TokenScanner::~TokenScanner() {}
@@ -21,15 +23,23 @@ string TokenScanner::nextToken() {
 }
 
 bool IfKeywordRepeated(const char *keywords) {
+    int num = 0;
+    for (auto i = 0; i < strlen(keywords); i++)
+        if (*(keywords + i) == '|') num++;
     vector<string> key_word;
     char *src = new char[strlen(keywords) + 1];
     strcpy(src, keywords);
     char *token = strtok(src, "|");
     while (token != nullptr) {
+        if (strcmp(token, "") == 0) {
+            delete[] src;
+            throw Error();
+        }
         key_word.push_back(token);
         token = strtok(nullptr, "|");
     }
     delete[] src;
+    if (num + 1 != key_word.size()) throw Error();
     while (!key_word.empty()) {
         for (auto iter = key_word.begin() + 1; iter != key_word.end(); iter++)
             if (*iter == *key_word.begin()) return true;
@@ -58,13 +68,11 @@ bool IfInvaild(const char *content, int index, int max_length) {
         return false;
     } else if (index == 3) {
         for (int i = 0; i < strlen(content); i++)
-            if (*(content + i) <= 47 || *(content + i) >= 58) 
-            return true;
+            if (*(content + i) <= 47 || *(content + i) >= 58) return true;
         return false;
     } else if (index == 4) {
         for (int i = 0; i < strlen(content); i++)
-            if (*(content + i) == '\"')
-             return true;
+            if (*(content + i) == '\"') return true;
         return false;
     } else if (index == 5) {
         int precision = -1;
