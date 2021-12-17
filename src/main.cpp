@@ -83,6 +83,7 @@ void process_line(TokenScanner &line) {
         string user_id, old_password, new_password;
         user_id = line.nextToken(), old_password = line.nextToken(),
         new_password = line.nextToken();
+        if (user_stack.empty()) throw Error();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(old_password.c_str(), 1, 30) ||
