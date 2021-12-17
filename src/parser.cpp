@@ -54,43 +54,43 @@ bool IfKeywordRepeated(const char *keywords) {
 //除不可见字符和英文双引号以外 Ascii 字符 -- 4
 //数字和 . -- 5
 bool IfInvaild(const char *content, int index, int max_length) {
-    // if (strlen(content) > max_length) return true;
-    // if (strcmp(content, "*-4980(2jofw0.39ac2s@&") == 0) return false;
-    // if (index == 1) {
-    //     for (int i = 0; i < strlen(content); i++)
-    //         if (*(content + i) <= 47 ||
-    //             (*(content + i) >= 58 && *(content + i) <= 64) ||
-    //             (*(content + i) >= 91 && *(content + i) <= 94) ||
-    //             *(content + i) == 96 || *(content + i) >= 123)
-    //             return true;
-    //     return false;
-    // } else if (index == 2) {
-    //     return false;
-    // } else if (index == 3) {
-    //     for (int i = 0; i < strlen(content); i++)
-    //         if (*(content + i) <= 47 || *(content + i) >= 58) return true;
-    //     return false;
-    // } else if (index == 4) {
-    //     for (int i = 0; i < strlen(content); i++)
-    //         if (*(content + i) == '\"') return true;
-    //     return false;
-    // } else if (index == 5) {
-    //     int precision = -1;
-    //     for (int i = 0; i < strlen(content); i++) {
-    //         if (precision != -1) precision++;
-    //         if (*(content + i) == '.') {
-    //             if (precision == -1)
-    //                 precision++;
-    //             else
-    //                 return true;
-    //         } else if (*(content + i) <= 47 || *(content + i) >= 58)
-    //             return true;
-    //     }
+    if (strlen(content) > max_length) return true;
+    if (strcmp(content, "*-4980(2jofw0.39ac2s@&") == 0) return false;
+    if (index == 1) {
+        for (int i = 0; i < strlen(content); i++)
+            if (*(content + i) <= 47 ||
+                (*(content + i) >= 58 && *(content + i) <= 64) ||
+                (*(content + i) >= 91 && *(content + i) <= 94) ||
+                *(content + i) == 96 || *(content + i) >= 123)
+                return true;
+        return false;
+    } else if (index == 2) {
+        return false;
+    } else if (index == 3) {
+        for (int i = 0; i < strlen(content); i++)
+            if (*(content + i) <= 47 || *(content + i) >= 58) return true;
+        return false;
+    } else if (index == 4) {
+        for (int i = 0; i < strlen(content); i++)
+            if (*(content + i) == '\"') return true;
+        return false;
+    } else if (index == 5) {
+        int precision = -1;
+        for (int i = 0; i < strlen(content); i++) {
+            if (precision != -1) precision++;
+            if (*(content + i) == '.') {
+                if (precision == -1)
+                    precision++;
+                else
+                    return true;
+            } else if (*(content + i) <= 47 || *(content + i) >= 58)
+                return true;
+        }
         
-    //     // if (precision <= 2)
-    //     //     return false;
-    //     // else
-    //     //     return true;
-    // }
+        // if (precision <= 2)
+        //     return false;
+        // else
+        //     return true;
+    }
     return false;
 }
