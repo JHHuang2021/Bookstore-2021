@@ -16,8 +16,9 @@ Book::Book() {
     strcpy(this->book_name_, "");
     strcpy(this->author_, "");
     strcpy(this->keyword_, "");
-    this->price_ = -1;
-    this->quantity_ = -1;
+    this->price_ = 0;
+    this->quantity_ = 0;
+    this->index_ = 0;
 }
 
 Book::Book(string ISBN, string book_name, string author, string keyword,
@@ -102,8 +103,7 @@ void Show(TokenScanner &line, int priority) {
         if (tim == "*-4980(2jofw0.39ac2s@&")
             times = -1;  //
         else {
-            if (tim.length() == 10 && tim > "2147483647")
-                throw Error();
+            if (tim.length() == 10 && tim > "2147483647") throw Error();
             times = atoi(tim.c_str());
         }
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
@@ -119,7 +119,9 @@ void Show(TokenScanner &line, int priority) {
     } else if (string(token) == "-name") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
-        if (token == nullptr) throw Error();
+        if (token == nullptr || *token != '\"' ||
+            *(token + strlen(token) - 1) != '\"')
+            throw Error();
         book_name = string(token);
         // book_name = string(strtok(nullptr, " "));
         book_name = book_name.substr(1, book_name.length() - 2);  //
@@ -128,7 +130,9 @@ void Show(TokenScanner &line, int priority) {
     } else if (string(token) == "-author") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
-        if (token == nullptr) throw Error();
+        if (token == nullptr || *token != '\"' ||
+            *(token + strlen(token) - 1) != '\"')
+            throw Error();
         author = string(token);
         // author = string(strtok(nullptr, " "));
         author = author.substr(1, author.length() - 2);  //
@@ -136,7 +140,9 @@ void Show(TokenScanner &line, int priority) {
     } else if (string(token) == "-keyword") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
-        if (token == nullptr) throw Error();
+        if (token == nullptr || *token != '\"' ||
+            *(token + strlen(token) - 1) != '\"')
+            throw Error();
         keyword = string(token);
         // keyword = string(strtok(nullptr, " "));
         keyword = keyword.substr(1, keyword.length() - 2);  //
@@ -226,7 +232,9 @@ void ModifyBook(Book &book, TokenScanner &line) {
         } else if (string(token) == "-name") {
             if (book_name != "") throw Error();
             token = strtok(nullptr, " ");
-            if (token == nullptr) throw Error();
+            if (token == nullptr || *token != '\"' ||
+                *(token + strlen(token) - 1) != '\"')
+                throw Error();
             book_name = string(token);
             // book_name = string(strtok(nullptr, " "));
             book_name = book_name.substr(1, book_name.length() - 2);  //
@@ -236,7 +244,9 @@ void ModifyBook(Book &book, TokenScanner &line) {
         } else if (string(token) == "-author") {
             if (author != "") throw Error();
             token = strtok(nullptr, " ");
-            if (token == nullptr) throw Error();
+            if (token == nullptr || *token != '\"' ||
+                *(token + strlen(token) - 1) != '\"')
+                throw Error();
             author = string(token);
             // author = string(strtok(nullptr, " "));
             author = author.substr(1, author.length() - 2);  //
@@ -245,7 +255,9 @@ void ModifyBook(Book &book, TokenScanner &line) {
         } else if (string(token) == "-keyword") {
             if (keyword != "") throw Error();
             token = strtok(nullptr, " ");
-            if (token == nullptr) throw Error();
+            if (token == nullptr || *token != '\"' ||
+                *(token + strlen(token) - 1) != '\"')
+                throw Error();
             keyword = string(token);
             // keyword = string(strtok(nullptr, " "));
             keyword = keyword.substr(1, keyword.length() - 2);  //

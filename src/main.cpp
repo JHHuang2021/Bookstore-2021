@@ -55,8 +55,9 @@ int main() {
 void process_line(TokenScanner &line) {
     string token;
     token = line.nextToken();
-    if (token == "*-4980(2jofw0.39ac2s@&") return;
-    if (token == "su") {
+    if (token == "*-4980(2jofw0.39ac2s@&")
+        return;
+    else if (token == "su") {
         Account tmp;
         string user_id = line.nextToken(), password = line.nextToken();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
