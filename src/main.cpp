@@ -78,7 +78,8 @@ void process_line(TokenScanner &line) {
         user_id = line.nextToken(), password = line.nextToken(),
         user_name = line.nextToken();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
-            IfInvaild(password.c_str(), 1, 30))
+            IfInvaild(password.c_str(), 1, 30) ||
+            IfInvaild(user_name.c_str(), 1, 30))
             throw Error();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
             user_name == "*-4980(2jofw0.39ac2s@&")
@@ -120,7 +121,8 @@ void process_line(TokenScanner &line) {
             user_name == "*-4980(2jofw0.39ac2s@&" || priority.length() != 1)
             throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
-            IfInvaild(password.c_str(), 1, 30))
+            IfInvaild(password.c_str(), 1, 30) ||
+            IfInvaild(user_name.c_str(), 1, 30))
             throw Error();
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
