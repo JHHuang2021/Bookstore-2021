@@ -17,6 +17,7 @@ vector<mkpr> user_stack;
 MainInfo<Account> account_info("account_info");
 
 int main() {
+    // freopen("test.in", "r", stdin);
     cin.tie(0);
     cout.tie(0);
     void process_line(TokenScanner & line);
@@ -28,7 +29,7 @@ int main() {
     string line;
     while (getline(cin, line)) {
         if (line == "") continue;
-        if (line == "exit" || line == "quit") break;
+        // if (line == "exit" || line == "quit") break;
         TokenScanner buffer(line);
         try {
             if (line.length() > 1024) throw Error();
@@ -45,7 +46,12 @@ void process_line(TokenScanner &line) {
     token = line.nextToken();
     if (token == "*-4980(2jofw0.39ac2s@&")
         return;
-    else if (token == "su") {
+    else if (token == "exit" || token == "quit") {
+        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&")
+            throw Error();
+        else
+            exit(0);
+    } else if (token == "su") {
         Account tmp;
         string user_id = line.nextToken(), password = line.nextToken();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
