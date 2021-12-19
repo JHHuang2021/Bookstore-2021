@@ -34,7 +34,8 @@ int main() {
         TokenScanner buffer(line);
         try {
             for (int i = 0; i < line.length(); i++)
-                if ((line[i] < 32 && line[i] != 10 && line[i] != 13)||line[i]==127)
+                if ((line[i] < 32 && line[i] != 10 && line[i] != 13) ||
+                    line[i] == 127)
                     throw Error();
             if (line.length() > 1024) throw Error();
             process_line(buffer);
@@ -96,6 +97,9 @@ void process_line(TokenScanner &line) {
         new_password = line.nextToken();
         if (user_stack.empty()) throw Error();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (old_password == "*-4980(2jofw0.39ac2s@&" &&
+            new_password == "*-4980(2jofw0.39ac2s@&")
+            throw Error();
         if (old_password != "*-4980(2jofw0.39ac2s@&" &&
             new_password == "*-4980(2jofw0.39ac2s@&" &&
             (user_stack.empty() ||
