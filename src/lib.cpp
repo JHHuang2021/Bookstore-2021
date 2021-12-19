@@ -214,7 +214,7 @@ void ModifyBook(Book &book, TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     char tmp[61];
     string old_ISBN = book.ISBN_;
-    string ISBN, book_name, author, keyword, price;
+    string ISBN = "", book_name = "", author = "", keyword = "", price = "";
     string nxt_token = line.nextToken();
     if (nxt_token == "*-4980(2jofw0.39ac2s@&") throw Error();
     while (nxt_token != "*-4980(2jofw0.39ac2s@&") {
