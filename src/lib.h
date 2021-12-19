@@ -19,7 +19,7 @@ class Book {
     char book_name_[61];
     char author_[61];
     char keyword_[61];
-    int quantity_ = 0;  //库存数量
+    long long quantity_ = 0;  //库存数量
     double price_ = 0;  //单价
    public:
     bool operator==(const Book &obj) const;

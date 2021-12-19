@@ -284,6 +284,7 @@ void ModifyBook(Book &book, TokenScanner &line) {
 
 void Import(Book &book, int quantity, double total_cost) {
     MainInfo<Book> book_info("book_info");
+    if (quantity == 0) throw Error();
     book.quantity_ += quantity;
     book_info.ModifyInfo(book, book.index_, book.ISBN_, book.ISBN_);
 }
