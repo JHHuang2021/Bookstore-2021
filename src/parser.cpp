@@ -66,7 +66,7 @@ bool IfInvaild(const char *content, int index, int max_length) {
         return false;
     } else if (index == 2) {
         for (int i = 0; i < strlen(content); i++)
-            if (*(content + i) <= 31) return true;
+            if (*(content + i) <= 31 || *(content + i) == 127) return true;
         return false;
     } else if (index == 3) {
         for (int i = 0; i < strlen(content); i++)
@@ -89,10 +89,10 @@ bool IfInvaild(const char *content, int index, int max_length) {
                 return true;
         }
 
-        // if (precision <= 2)
-        //     return false;
-        // else
-        //     return true;
+        if (precision != -1 && precision != 2)
+            return false;
+        else
+            return true;
     }
     return false;
 }

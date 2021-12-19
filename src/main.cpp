@@ -34,7 +34,7 @@ int main() {
         TokenScanner buffer(line);
         try {
             for (int i = 0; i < line.length(); i++)
-                if (line[i] < 32 && line[i] != 10 && line[i] != 13)
+                if ((line[i] < 32 && line[i] != 10 && line[i] != 13)||line[i]==127)
                     throw Error();
             if (line.length() > 1024) throw Error();
             process_line(buffer);
