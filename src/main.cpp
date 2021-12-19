@@ -1,3 +1,4 @@
+#include <cctype>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -35,7 +36,7 @@ int main() {
         try {
             for (int i = 0; i < line.length(); i++)
                 if ((line[i] < 32 && line[i] != 10 && line[i] != 13) ||
-                    line[i] == 127)
+                    line[i] >= 127 || !isascii(line[i]))
                     throw Error();
             if (line.length() > 1024) throw Error();
             process_line(buffer);

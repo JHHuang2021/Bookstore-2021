@@ -120,8 +120,8 @@ void Show(TokenScanner &line, int priority) {
     } else if (string(token) == "-name") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
-        if (token == nullptr || *token != '\"' ||
-            *(token + strlen(token) - 1) != '\"')
+        if (token == nullptr || *token != '"' ||
+            *(token + strlen(token) - 1) != '"')
             throw Error();
         book_name = string(token);
         // book_name = string(strtok(nullptr, " "));
@@ -131,8 +131,8 @@ void Show(TokenScanner &line, int priority) {
     } else if (string(token) == "-author") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
-        if (token == nullptr || *token != '\"' ||
-            *(token + strlen(token) - 1) != '\"')
+        if (token == nullptr || *token != '"' ||
+            *(token + strlen(token) - 1) != '"')
             throw Error();
         author = string(token);
         // author = string(strtok(nullptr, " "));
@@ -141,8 +141,8 @@ void Show(TokenScanner &line, int priority) {
     } else if (string(token) == "-keyword") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
-        if (token == nullptr || *token != '\"' ||
-            *(token + strlen(token) - 1) != '\"')
+        if (token == nullptr || *token != '"' ||
+            *(token + strlen(token) - 1) != '"')
             throw Error();
         keyword = string(token);
         // keyword = string(strtok(nullptr, " "));
@@ -233,8 +233,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
         } else if (string(token) == "-name") {
             if (book_name != "") throw Error();
             token = strtok(nullptr, " ");
-            if (token == nullptr || *token != '\"' ||
-                *(token + strlen(token) - 1) != '\"')
+            if (token == nullptr || *token != '"' ||
+                *(token + strlen(token) - 1) != '"')
                 throw Error();
             book_name = string(token);
             // book_name = string(strtok(nullptr, " "));
@@ -245,8 +245,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
         } else if (string(token) == "-author") {
             if (author != "") throw Error();
             token = strtok(nullptr, " ");
-            if (token == nullptr || *token != '\"' ||
-                *(token + strlen(token) - 1) != '\"')
+            if (token == nullptr || *token != '"' ||
+                *(token + strlen(token) - 1) != '"')
                 throw Error();
             author = string(token);
             // author = string(strtok(nullptr, " "));
@@ -256,8 +256,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
         } else if (string(token) == "-keyword") {
             if (keyword != "") throw Error();
             token = strtok(nullptr, " ");
-            if (token == nullptr || *token != '\"' ||
-                *(token + strlen(token) - 1) != '\"')
+            if (token == nullptr || *token != '"' ||
+                *(token + strlen(token) - 1) != '"')
                 throw Error();
             keyword = string(token);
             // keyword = string(strtok(nullptr, " "));
