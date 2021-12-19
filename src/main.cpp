@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -32,6 +33,9 @@ int main() {
         // if (line == "exit" || line == "quit") break;
         TokenScanner buffer(line);
         try {
+            for (int i = 0; i < line.length(); i++)
+                if (line[i] < 32 && line[i] != 10 && line[i] != 13)
+                    throw Error();
             if (line.length() > 1024) throw Error();
             process_line(buffer);
         } catch (Error &ex) {
@@ -78,7 +82,8 @@ void process_line(TokenScanner &line) {
         user_id = line.nextToken(), password = line.nextToken(),
         user_name = line.nextToken();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
-            IfInvaild(password.c_str(), 1, 30) )
+            IfInvaild(password.c_str(), 1, 30) ||
+            IfInvaild(password.c_str(), 2, 30))
             throw Error();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
             user_name == "*-4980(2jofw0.39ac2s@&")
@@ -120,7 +125,8 @@ void process_line(TokenScanner &line) {
             user_name == "*-4980(2jofw0.39ac2s@&" || priority.length() != 1)
             throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
-            IfInvaild(password.c_str(), 1, 30))
+            IfInvaild(password.c_str(), 1, 30) ||
+            IfInvaild(password.c_str(), 2, 30))
             throw Error();
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
