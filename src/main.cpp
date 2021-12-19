@@ -137,7 +137,8 @@ void process_line(TokenScanner &line) {
         user_stack.rbegin()->first.UserAdd(user_id, password, priorityy,
                                            user_name);
     } else if (token == "delete") {
-        if (user_stack.rbegin()->first.GetPriority() < 7) throw Error();
+        if (user_stack.empty() || user_stack.rbegin()->first.GetPriority() < 7)
+            throw Error();
         string user_id;
         user_id = line.nextToken();
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
