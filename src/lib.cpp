@@ -225,8 +225,8 @@ void ModifyBook(Book &book, TokenScanner &line) {
             token = strtok(nullptr, " ");
             if (token == nullptr) throw Error();
             ISBN = string(token);
-            // if (ISBN == "" || strcmp(ISBN.c_str(), book.ISBN_) == 0)
-            if (ISBN == "") throw Error();
+            if (ISBN == "" || strcmp(ISBN.c_str(), book.ISBN_) == 0)
+                throw Error();
             book_info.FindInfo(ISBN, 1);  // to be modified
             if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
             strcpy(book.ISBN_, ISBN.c_str());
