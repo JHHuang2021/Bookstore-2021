@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iomanip>
 #include <ios>
+#include <sstream>
 #include <string>
 
 #include "error.h"
@@ -89,7 +90,8 @@ void Book::operator()(const Book &obj) {
     if (this->quantity_ == -1) this->quantity_ = obj.quantity_;
 }
 
-void Show(TokenScanner &line, int priority) {
+stringstream Show(TokenScanner &line, int priority) {
+    stringstream ss;
     MainInfo<Book> book_info("book_info");
     set<Book> find;
     char tmp[61];
@@ -110,7 +112,7 @@ void Show(TokenScanner &line, int priority) {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         Log log("log");
         log.ShowFinance(times);
-        return;
+        return stringstream("");
     } else if (string(token) == "-ISBN") {
         if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
         token = strtok(nullptr, " ");
@@ -153,17 +155,18 @@ void Show(TokenScanner &line, int priority) {
         throw Error();
     book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
     if (find.empty())
-        cout << "\n";
+        ss << "\n";
     else
         while (!find.empty()) {
-            // [ISBN]\t[Book-Name]\t[Author]\t[Keyword]\t[Price]\t[¿â´æÊýÁ¿]\n
+            // [ISBN]\t[Book-Name]\t[Author]\t[Keyword]\t[Price]\t[]\n
             auto iter = find.begin();
-            cout << iter->GetISBN() << "\t" << iter->GetBookName() << "\t"
-                 << iter->GetAuthor() << "\t" << iter->GetKeyword() << "\t"
-                 << fixed << setprecision(2) << iter->GetPrice() << "\t"
-                 << iter->GetQuantity() << "\n";
+            ss << iter->GetISBN() << "\t" << iter->GetBookName() << "\t"
+               << iter->GetAuthor() << "\t" << iter->GetKeyword() << "\t"
+               << fixed << setprecision(2) << iter->GetPrice() << "\t"
+               << iter->GetQuantity() << "\n";
             find.erase(iter);
         }
+    return ss;
 }
 
 void BuyBook(TokenScanner &line) {

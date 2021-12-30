@@ -39,7 +39,7 @@ class Book {
     const double GetPrice() const;
 };
 
-void Show(TokenScanner &line, int index);
+stringstream Show(TokenScanner &line, int index);
 void BuyBook(TokenScanner &line);
 Book Select(TokenScanner &line);
 Book Select(const int index);
