@@ -3,15 +3,17 @@
 
 #include <bits/stdc++.h>
 
+#include "account.h"
 #include "parser.h"
 
 using namespace std;
 
 class Book {
-    friend Book Select(TokenScanner &line);
-    friend void ModifyBook(Book &book, TokenScanner &line);
-    friend void BuyBook(TokenScanner &line);
-    friend void Import(Book &book, int quantity, double total_cost);
+    friend Book Select(Account &account, TokenScanner &line);
+    friend void ModifyBook(Account &account, Book &book, TokenScanner &line);
+    friend void BuyBook(Account &account, TokenScanner &line);
+    friend void Import(Account &account, Book &book, int quantity,
+                       double total_cost);
 
    private:
     int index_ = 0;
@@ -20,7 +22,7 @@ class Book {
     char author_[61];
     char keyword_[61];
     long long quantity_ = 0;  //库存数量
-    double price_ = 0;  //单价
+    double price_ = 0;        //单价
    public:
     bool operator==(const Book &obj) const;
     bool operator<(const Book &obj) const;
@@ -39,11 +41,11 @@ class Book {
     const double GetPrice() const;
 };
 
-stringstream Show(TokenScanner &line, int index);
-void BuyBook(TokenScanner &line);
-Book Select(TokenScanner &line);
+stringstream Show(Account &account, TokenScanner &line, int index);
+void BuyBook(Account &account, TokenScanner &line);
+Book Select(Account &account, TokenScanner &line);
 Book Select(const int index);
-void ModifyBook(Book &book, TokenScanner &line);
-void Import(Book &book, int quantity, double total_cost);
+void ModifyBook(Account &account, Book &book, TokenScanner &line);
+void Import(Account &account, Book &book, int quantity, double total_cost);
 
 #endif

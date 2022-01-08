@@ -22,29 +22,40 @@
 
   account ：实现一个账户的类，成员变量为账户各种信息，成员函数为账户所能执行的操作，使用派生的方式来完成权限的管理。
 
+  // [修改] 不使用派生
+
   book : 实现一个图书的类，成员变量为图书的信息
 
   operation : 实现一个操作的类，成员变量为操作的信息和执行者，成员函数为操作记录的输出
 
   transaction：实现一个交易的类，成员变量为交易的信息，成员函数为交易记录的输出
 
+  // [修改] 实现较为困难，弃用 operation 以及 transaction 两个类
+
   block_chain : 实现一个块链的类，并进行包装
 
   system: 实现系统的类用于管理程序中被选中的书籍和最后登录的账号
 
-  
+  // [修改] 弃用，使用登录栈
+
+
+
 
 - #### file：
 
-  book_storage ：储存仓库内书的信息。
+  book_info ：储存仓库内书的信息。
 
   log_in_account :  为了防止系统中途down掉无法恢复原本系统内的帐号，用一个类似栈的结构来储存目前登陆在系统内的账号名单。
 
+  // [修改] 弃用
+
   transaction_document : 储存所有的流水记录,并在开头储存总流水数，和总盈亏情况
 
-  operation_document : 储存所有的操作记录，并在开头储存总操作数
+  // [修改] 弃用
 
-  account_document：储存所有的账号信息
+  operation_info : 储存所有的操作记录，并在开头储存总操作数
+
+  account_info：储存所有的账号信息
 
 
 
@@ -60,14 +71,14 @@
 
 
 
+
 - #### parser
+  // [修改] 仅用来解析单词，无其他功能
 
   1. 判断语句类型，调用不同类型语句对应的parser函数,（在parser类中进行实现）
   2. 将parser处理的参数调入到account的执行函数当中
   3. 生成对应的operation对象储存到operation_document
   4. 如果有资金的流动，储存一个transaction对象储存到transaction_document
-
-
 
 
 
@@ -176,6 +187,7 @@ public :
   
 
 - #### operation
+  // [修改] 已删
 
   class operation{
 
@@ -198,6 +210,7 @@ public :
   
 
 - #### transaction
+  // [修改] 已删
 
   class transaction{
 
@@ -220,8 +233,10 @@ public :
   }
 
   
+
 [修改] 不使用 system，而用 pair<Account,string> 实例化的 vector 存储即可
 - #### system
+  // [修改] 已删
 
   class system {
 
@@ -277,15 +292,8 @@ public :
 
      //操作的输出为主题，当涉及到交易时下对应操作下方输出相应交易记录
 
-     
-
-    
-
-   
-
-   
 
 
 
 
-
+注：聊天记录附于pdf文件中

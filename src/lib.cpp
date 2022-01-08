@@ -7,10 +7,14 @@
 #include <sstream>
 #include <string>
 
+#include "account.h"
 #include "error.h"
 #include "filemap.hpp"
 #include "log.h"
 #include "parser.h"
+
+const string kMod = "*-4980(2jofw0.39ac2s@&";
+LogForAll all_log;
 
 Book::Book() {
     strcpy(this->ISBN_, "");
@@ -90,7 +94,7 @@ void Book::operator()(const Book &obj) {
     if (this->quantity_ == -1) this->quantity_ = obj.quantity_;
 }
 
-stringstream Show(TokenScanner &line, int priority) {
+stringstream Show(Account &account, TokenScanner &line, int priority) {
     stringstream ss;
     MainInfo<Book> book_info("book_info");
     set<Book> find;
@@ -102,25 +106,25 @@ stringstream Show(TokenScanner &line, int priority) {
         if (priority != 7) throw Error();
         string tim = line.nextToken().c_str();
         int times;
-        if (tim == "*-4980(2jofw0.39ac2s@&")
+        if (tim == kMod)
             times = -1;  //
         else if (IfInvaild(tim.c_str(), 3, 10) ||
                  (tim.length() == 10 && tim > "2147483647"))
             throw Error();
         else
             times = atoi(tim.c_str());
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != kMod) throw Error();
         Log log("log");
         log.ShowFinance(times);
         return stringstream("");
     } else if (string(token) == "-ISBN") {
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != kMod) throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr) throw Error();
         ISBN = string(token);
         if (ISBN == "" || IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
     } else if (string(token) == "-name") {
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != kMod) throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr || *token != '"' ||
             *(token + strlen(token) - 1) != '"')
@@ -131,7 +135,7 @@ stringstream Show(TokenScanner &line, int priority) {
         if (book_name == "" || IfInvaild(book_name.c_str(), 4, 60))
             throw Error();
     } else if (string(token) == "-author") {
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != kMod) throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr || *token != '"' ||
             *(token + strlen(token) - 1) != '"')
@@ -141,7 +145,7 @@ stringstream Show(TokenScanner &line, int priority) {
         author = author.substr(1, author.length() - 2);  //
         if (author == "" || IfInvaild(author.c_str(), 4, 60)) throw Error();
     } else if (string(token) == "-keyword") {
-        if (line.nextToken() != "*-4980(2jofw0.39ac2s@&") throw Error();
+        if (line.nextToken() != kMod) throw Error();
         token = strtok(nullptr, " ");
         if (token == nullptr || *token != '"' ||
             *(token + strlen(token) - 1) != '"')
@@ -151,7 +155,7 @@ stringstream Show(TokenScanner &line, int priority) {
         keyword = keyword.substr(1, keyword.length() - 2);  //
         if (keyword == "" || IfInvaild(keyword.c_str(), 4, 60)) throw Error();
         if (strstr(keyword.c_str(), "|") != nullptr) throw Error();
-    } else if (string(token) != "*-4980(2jofw0.39ac2s@&")
+    } else if (string(token) != kMod)
         throw Error();
     book_info.FindInfo(Book(ISBN, book_name, author, keyword, 0), find);
     if (find.empty())
@@ -166,16 +170,16 @@ stringstream Show(TokenScanner &line, int priority) {
                << iter->GetQuantity() << "\n";
             find.erase(iter);
         }
+    all_log.Record(account.GetUserId() + " " +
+                   to_string(account.GetPriority()) + " show ");
     return ss;
 }
 
-void BuyBook(TokenScanner &line) {
+void BuyBook(Account &account, TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN, quantity;
     ISBN = line.nextToken(), quantity = line.nextToken();
-    if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
-        ISBN == "*-4980(2jofw0.39ac2s@&" ||
-        quantity == "*-4980(2jofw0.39ac2s@&")
+    if (line.nextToken() != kMod || ISBN == kMod || quantity == kMod)
         throw Error();
     Book tmp = book_info.FindInfo(ISBN);
     if (IfInvaild(quantity.c_str(), 3, 10)) throw Error();
@@ -190,15 +194,19 @@ void BuyBook(TokenScanner &line) {
     cout << fixed << setprecision(2) << quantity_int * tmp.price_ << endl;
     Log log("log");
     log.Record(to_string(quantity_int * tmp.price_));
+    LogForAll all_log;
+    all_log.Record(account.GetUserId() + " " +
+                   to_string(account.GetPriority()) + " buy " + ISBN + " " +
+                   to_string(quantity_int));
 }
 
-Book Select(TokenScanner &line) {
+Book Select(Account &account, TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     string ISBN = line.nextToken();
-    if (line.nextToken() != "*-4980(2jofw0.39ac2s@&" ||
-        ISBN == "*-4980(2jofw0.39ac2s@&")
-        throw Error();
+    if (line.nextToken() != kMod || ISBN == kMod) throw Error();
     if (IfInvaild(ISBN.c_str(), 2, 20)) throw Error();
+    all_log.Record(account.GetUserId() + " " +
+                   to_string(account.GetPriority()) + " select " + ISBN);
     try {
         return book_info.FindInfo(ISBN);
     } catch (Error &ex) {
@@ -213,14 +221,14 @@ Book Select(const int index) {
     return book_info.GetInfo(index);
 }
 
-void ModifyBook(Book &book, TokenScanner &line) {
+void ModifyBook(Account &account, Book &book, TokenScanner &line) {
     MainInfo<Book> book_info("book_info");
     char tmp[61];
     string old_ISBN = book.ISBN_;
     string ISBN = "", book_name = "", author = "", keyword = "", price = "";
     string nxt_token = line.nextToken();
-    if (nxt_token == "*-4980(2jofw0.39ac2s@&") throw Error();
-    while (nxt_token != "*-4980(2jofw0.39ac2s@&") {
+    if (nxt_token == kMod) throw Error();
+    while (nxt_token != kMod) {
         strcpy(tmp, nxt_token.c_str());
         char *token = strtok(tmp, "=");
         if (string(token) == "-ISBN") {
@@ -284,11 +292,17 @@ void ModifyBook(Book &book, TokenScanner &line) {
         nxt_token = line.nextToken();
     }
     book_info.ModifyInfo(book, book.index_, old_ISBN, book.ISBN_);
+    all_log.Record(account.GetUserId() + " " +
+                   to_string(account.GetPriority()) + " modify");
 }
 
-void Import(Book &book, int quantity, double total_cost) {
+void Import(Account &account, Book &book, int quantity, double total_cost) {
     MainInfo<Book> book_info("book_info");
     if (quantity == 0) throw Error();
     book.quantity_ += quantity;
     book_info.ModifyInfo(book, book.index_, book.ISBN_, book.ISBN_);
+    all_log.Record(account.GetUserId() + " " +
+                   to_string(account.GetPriority()) + " import " +
+                   book.GetISBN() + " " + to_string(quantity) + " " +
+                   to_string(total_cost));
 }
