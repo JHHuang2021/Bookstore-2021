@@ -3,27 +3,26 @@
 #include <bits/stdc++.h>
 
 #include "account.h"
-using namespace std;
 
 class Log {
    private:
-    string file_name_;
+    std::string file_name_;
 
    public:
-    Log(string file_name);
+    Log(std::string file_name);
     ~Log();
-    void Record(string rec);
+    void Record(std::string rec);
     void ShowFinance(int times);
 };
 
 class LogForAll {
    private:
-    const string file_name_ = "allog";
+    const std::string file_name_ = "allog";
 
    public:
     LogForAll();
     ~LogForAll();
-    void Record(string rec);
+    void Record(std::string rec);
     void Show();
     void ShowMyself(Account &account);
     void ShowEmployee();

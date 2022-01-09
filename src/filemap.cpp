@@ -5,7 +5,7 @@
 #include <fstream>
 #include <ostream>
 
-UllNode::UllNode(const string &isbn, const int &index) {
+UllNode::UllNode(const std::string &isbn, const int &index) {
     strcpy(str_, isbn.c_str());
     this->index_ = index;
 }
@@ -71,15 +71,15 @@ UllBlock &UllBlock::operator=(const UllBlock &rhs) {
     return *this;
 }
 
-Ull::Ull(const string &file_name) : file_name_(file_name) {
-    ifstream in_1(file_name, ifstream::in);
+Ull::Ull(const std::string &file_name) : file_name_(file_name) {
+    std::ifstream in_1(file_name, std::ifstream::in);
 
     if (!in_1) {
-        ofstream out(file_name, ofstream::out);
+        std::ofstream out(file_name, std::ofstream::out);
         int block_num = 1;
         int first_index = 0;
         UllBlock tmp;
-        ffile_.open(file_name, fstream::in | fstream::binary | fstream::out);
+        ffile_.open(file_name, std::fstream::in | std::fstream::binary | std::fstream::out);
         ffile_.write(reinterpret_cast<char *>(&block_num), sizeof(int));
         ffile_.write(reinterpret_cast<char *>(&first_index), sizeof(int));
         ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
@@ -90,7 +90,7 @@ Ull::Ull(const string &file_name) : file_name_(file_name) {
 void Ull::AddNode(const UllNode &book) {
     int block_num, first_index;
     ffile_.close();
-    ffile_.open(file_name_, fstream::out | fstream::binary | fstream::in);
+    ffile_.open(file_name_, std::fstream::out | std::fstream::binary | std::fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
     ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
@@ -101,7 +101,7 @@ void Ull::AddNode(const UllNode &book) {
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         index = tmp.nxt_;
         if ((tmp.array_[tmp.num_ - 1] >= book) || index == -1) {
-            auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
+            auto binary_find = std::lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            book, UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
             for (int i = indexx; i < tmp.num_; i++)  // binary_search
@@ -115,7 +115,7 @@ void Ull::AddNode(const UllNode &book) {
     }
     index = tmp.ind_;
     auto binary_find =
-        lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
+        std::lower_bound(tmp.array_, tmp.array_ + tmp.num_, book, UllNode::Cmp);
     i = binary_find - tmp.array_;
     // update the bound
     for (int j = tmp.num_ - 1; j >= i; j--)
@@ -138,7 +138,7 @@ void Ull::AddNode(const UllNode &book) {
 
 void Ull::SplitBlock(UllBlock &obj, const int &index) {  // to be checked
     int block_num, put_index = 0, first_index;
-    // ffile.open(file_name, fstream::out | fstream::binary | fstream::in);
+    // ffile.open(file_name, std::fstream::out | std::fstream::binary | std::fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
     ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
@@ -163,11 +163,11 @@ void Ull::SplitBlock(UllBlock &obj, const int &index) {  // to be checked
     ffile_.write(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
 }
 
-void Ull::FindNode(const string &key, set<int> &tp) {
+void Ull::FindNode(const std::string &key, std::set<int> &tp) {
     int block_num, first_index;
     tp.clear();
     ffile_.close();
-    ffile_.open(file_name_, fstream::out | fstream::binary | fstream::in);
+    ffile_.open(file_name_, std::fstream::out | std::fstream::binary | std::fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
     ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
@@ -179,7 +179,7 @@ void Ull::FindNode(const string &key, set<int> &tp) {
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (strcmp(tmp.array_[0].str_, key.c_str()) <= 0 &&
             strcmp(tmp.array_[tmp.num_ - 1].str_, key.c_str()) >= 0) {
-            auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
+            auto binary_find = std::lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            UllNode(key, INT_MIN), UllNode::Cmp);
             int indexx = binary_find - tmp.array_;
             for (int i = indexx; i < tmp.num_; i++)
@@ -196,7 +196,7 @@ void Ull::FindNode(const string &key, set<int> &tp) {
 void Ull::DeleteNode(const UllNode &node) {
     int block_num, first_index;
     ffile_.close();
-    ffile_.open(file_name_, fstream::out | fstream::binary | fstream::in);
+    ffile_.open(file_name_, std::fstream::out | std::fstream::binary | std::fstream::in);
     ffile_.seekg(0);
     ffile_.read(reinterpret_cast<char *>(&block_num), sizeof(int));
     ffile_.read(reinterpret_cast<char *>(&first_index), sizeof(int));
@@ -206,7 +206,7 @@ void Ull::DeleteNode(const UllNode &node) {
         ffile_.seekg(2 * sizeof(int) + index * sizeof(UllBlock));
         ffile_.read(reinterpret_cast<char *>(&tmp), sizeof(UllBlock));
         if (node >= tmp.array_[0] && node <= tmp.array_[tmp.num_ - 1]) {
-            auto binary_find = lower_bound(tmp.array_, tmp.array_ + tmp.num_,
+            auto binary_find = std::lower_bound(tmp.array_, tmp.array_ + tmp.num_,
                                            node, UllNode::Cmp);
             i = binary_find - tmp.array_;
             //            for (i = 0; i < tmp.num_; i++)

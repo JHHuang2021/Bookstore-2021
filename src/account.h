@@ -3,10 +3,9 @@
 #include <bits/stdc++.h>
 
 #include <cstring>
-using namespace std;  // todo
 class Account {
-    friend void Passwd(string &user_id, string old_password, int priority,
-                       string new_password);
+    friend void Passwd(std::string &user_id, std::string old_password, int priority,
+                       std::string new_password);
 
    private:
     char user_id_[31], password_[31], user_name_[31];
@@ -14,23 +13,23 @@ class Account {
 
    public:
     Account();
-    Account(string user_id, string user_name, string pw, int priority);
+    Account(std::string user_id, std::string user_name, std::string pw, int priority);
     ~Account();
 
     Account &operator=(const Account &obj);
-    string GetPasswd();
-    string GetUserId();
+    std::string GetPasswd();
+    std::string GetUserId();
     int GetPriority();
 
     // void logout();
 
-    void UserAdd(string &user_id, string &password, int priority,
-                 string &user_name);
+    void UserAdd(std::string &user_id, std::string &password, int priority,
+                 std::string &user_name);
 };
-void Passwd(string &user_id, string new_password, int priority,
-            string old_password);
-void Delete(string &user_id);
-void Register(string &user_id, string &password, string &user_name);
-bool Login(string &user_id, string password);
+void Passwd(std::string &user_id, std::string new_password, int priority,
+            std::string old_password);
+void Delete(std::string &user_id);
+void Register(std::string &user_id, std::string &password, std::string &user_name);
+bool Login(std::string &user_id, std::string password);
 
 #endif  // ACCOUNT_H

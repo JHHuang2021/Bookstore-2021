@@ -6,8 +6,6 @@
 #include "account.h"
 #include "parser.h"
 
-using namespace std;
-
 class Book {
     friend Book Select(Account &account, TokenScanner &line);
     friend void ModifyBook(Account &account, Book &book, TokenScanner &line);
@@ -29,19 +27,19 @@ class Book {
     Book &operator=(const Book obj);
     void operator()(const Book &obj);
     Book();
-    Book(string ISBN, string book_name, string author, string keyword,
+    Book(std::string ISBN, std::string book_name, std::string author, std::string keyword,
          int index, int quantity = 0, double price = 0);
     ~Book();
-    const string GetISBN() const;
-    const string GetBookName() const;
-    const string GetAuthor() const;
-    const string GetKeyword() const;
+    const std::string GetISBN() const;
+    const std::string GetBookName() const;
+    const std::string GetAuthor() const;
+    const std::string GetKeyword() const;
     const int GetIndex() const;
     const int GetQuantity() const;
     const double GetPrice() const;
 };
 
-stringstream Show(Account &account, TokenScanner &line, int index);
+std::stringstream Show(Account &account, TokenScanner &line, int index);
 void BuyBook(Account &account, TokenScanner &line);
 Book Select(Account &account, TokenScanner &line);
 Book Select(const int index);

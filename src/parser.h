@@ -1,21 +1,21 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include <sstream>
-using namespace std;
+
 class TokenScanner {
    public:
     TokenScanner();
 
-    TokenScanner(const string &str);
+    TokenScanner(const std::string &str);
 
     ~TokenScanner();
 
-    void setInput(const string &str);
+    void setInput(const std::string &str);
 
-    string nextToken();
+    std::string nextToken();
 
    private:
-    istringstream buffer;
+    std::istringstream buffer;
 };
 #endif
 

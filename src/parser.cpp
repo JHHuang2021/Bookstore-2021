@@ -10,11 +10,11 @@ TokenScanner::TokenScanner() {}
 
 TokenScanner::~TokenScanner() {}
 
-TokenScanner::TokenScanner(const string &str) { buffer.str(str); }
-void TokenScanner::setInput(const string &str) { buffer.str(str); }
+TokenScanner::TokenScanner(const std::string &str) { buffer.str(str); }
+void TokenScanner::setInput(const std::string &str) { buffer.str(str); }
 
-string TokenScanner::nextToken() {
-    string token;
+std::string TokenScanner::nextToken() {
+    std::string token;
     buffer >> token;
     if (token != "")
         return token;
@@ -26,7 +26,7 @@ bool IfKeywordRepeated(const char *keywords) {
     int num = 0;
     for (auto i = 0; i < strlen(keywords); i++)
         if (*(keywords + i) == '|') num++;
-    vector<string> key_word;
+    std::vector<std::string> key_word;
     char *src = new char[strlen(keywords) + 1];
     strcpy(src, keywords);
     char *token = strtok(src, "|");

@@ -17,16 +17,16 @@
 #include "log.h"
 #include "parser.h"
 
-#define mkpr pair<Account, Book>
-vector<mkpr> user_stack;
+#define mkpr std::pair<Account, Book>
+std::vector<mkpr> user_stack;
 MainInfo<Account> account_info("account_info");
 LogForAll log_all;
-const string kMod = "*-4980(2jofw0.39ac2s@&";
-string Process(string cmd) {
+const std::string kMod = "*-4980(2jofw0.39ac2s@&";
+std::string Process(std::string cmd) {
     // freopen("test.in", "r", stdin);
     // cin.tie(0);
-    // cout.tie(0);
-    string process_line(TokenScanner & line);
+    // std::cout.tie(0);
+    std::string process_line(TokenScanner & line);
     if (cmd == "") return "";
     // if (line == "exit" || line == "quit") break;
     TokenScanner buffer(cmd);
@@ -42,8 +42,8 @@ string Process(string cmd) {
     }
 }
 
-string process_line(TokenScanner &line) {
-    string token;
+std::string process_line(TokenScanner &line) {
+    std::string token;
     token = line.nextToken();
     if (token == kMod)
         return "";
@@ -54,7 +54,7 @@ string process_line(TokenScanner &line) {
             exit(0);
     } else if (token == "su") {
         Account tmp;
-        string user_id = line.nextToken(), password = line.nextToken();
+        std::string user_id = line.nextToken(), password = line.nextToken();
         if (line.nextToken() != kMod) throw Error();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
             IfInvaild(password.c_str(), 1, 30))
@@ -79,7 +79,7 @@ string process_line(TokenScanner &line) {
                 Select(user_stack.rbegin()->second.GetIndex());
         return "1";
     } else if (token == "register") {
-        string user_id, password, user_name;
+        std::string user_id, password, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         user_name = line.nextToken();
         if (IfInvaild(user_id.c_str(), 1, 30) ||
@@ -92,7 +92,7 @@ string process_line(TokenScanner &line) {
         return "1";
     } else if (token == "passwd") {
         //`passwd [User-ID] ([Old-Password])? [New-Password]`
-        string user_id, old_password, new_password;
+        std::string user_id, old_password, new_password;
         user_id = line.nextToken(), old_password = line.nextToken(),
         new_password = line.nextToken();
         if (user_stack.empty()) throw Error();
@@ -118,12 +118,12 @@ string process_line(TokenScanner &line) {
         else
             Passwd(user_id, old_password, priority, "");
         log_all.Record(user_stack.rbegin()->first.GetUserId() + " " +
-                       to_string(user_stack.rbegin()->first.GetPriority()) +
+                       std::to_string(user_stack.rbegin()->first.GetPriority()) +
                        " passwd " + user_id);
         return "1";
     } else if (token == "useradd") {
         //`useradd [User-ID] [Password] [Priority] [User-Name]`
-        string user_id, password, priority, user_name;
+        std::string user_id, password, priority, user_name;
         user_id = line.nextToken(), password = line.nextToken(),
         priority = line.nextToken(), user_name = line.nextToken();
         if (line.nextToken() != kMod || user_name == kMod ||
@@ -142,30 +142,30 @@ string process_line(TokenScanner &line) {
         user_stack.rbegin()->first.UserAdd(user_id, password, priorityy,
                                            user_name);
         log_all.Record(user_stack.rbegin()->first.GetUserId() + " " +
-                       to_string(user_stack.rbegin()->first.GetPriority()) +
+                       std::to_string(user_stack.rbegin()->first.GetPriority()) +
                        " add " + user_id);
         return "1";
     } else if (token == "delete") {
         if (user_stack.empty() || user_stack.rbegin()->first.GetPriority() < 7)
             throw Error();
-        string user_id;
+        std::string user_id;
         user_id = line.nextToken();
         if (line.nextToken() != kMod) throw Error();
         for (auto iter : user_stack)
             if (iter.first.GetUserId() == user_id) throw Error();
         Delete(user_id);  //
         log_all.Record(user_stack.rbegin()->first.GetUserId() + " " +
-                       to_string(user_stack.rbegin()->first.GetPriority()) +
+                       std::to_string(user_stack.rbegin()->first.GetPriority()) +
                        " delete " + user_id);
         return "1";
     } else if (token == "show") {  ////////
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->first.GetPriority() == 0) throw Error();
-        string show_ans(Show(user_stack.rbegin()->first, line,
+        std::string show_ans(Show(user_stack.rbegin()->first, line,
                              user_stack.rbegin()->first.GetPriority())
                             .str());
         log_all.Record(user_stack.rbegin()->first.GetUserId() + " " +
-                       to_string(user_stack.rbegin()->first.GetPriority()) +
+                       std::to_string(user_stack.rbegin()->first.GetPriority()) +
                        " show");
         return show_ans;
     } else if (token == "buy") {
@@ -179,7 +179,7 @@ string process_line(TokenScanner &line) {
         // operations to be modified
         user_stack.rbegin()->second = Select(user_stack.rbegin()->first, line);
         log_all.Record(user_stack.rbegin()->first.GetUserId() + " " +
-                       to_string(user_stack.rbegin()->first.GetPriority()) +
+                       std::to_string(user_stack.rbegin()->first.GetPriority()) +
                        " select");
         return "1";
     } else if (token == "modify") {
@@ -193,7 +193,7 @@ string process_line(TokenScanner &line) {
         if (user_stack.empty()) throw Error();
         if (user_stack.rbegin()->second.GetISBN() == "") throw Error();
         if (user_stack.rbegin()->first.GetPriority() < 3) throw Error();
-        string quantity = line.nextToken(), total_cost = line.nextToken();
+        std::string quantity = line.nextToken(), total_cost = line.nextToken();
         if (line.nextToken() != kMod || quantity == kMod || total_cost == kMod)
             throw Error();
         if (IfInvaild(quantity.c_str(), 3, 10) ||
@@ -265,9 +265,9 @@ void RunFrontEnd() {
             continue;
         }
         recv(sclient, revdata, BUFFER_SIZE, 0);
-        cout << "recieve command: " << revdata << " length: " << strlen(revdata)
-             << endl;
-        string result_str = Process(revdata);
+        std::cout << "recieve command: " << revdata << " length: " << strlen(revdata)
+             << std::endl;
+        std::string result_str = Process(revdata);
         send(sclient, result_str.c_str(), result_str.length(), 0);
     }
 }

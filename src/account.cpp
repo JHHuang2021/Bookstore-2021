@@ -9,7 +9,7 @@ Account::Account() {}
 
 Account::~Account() {}
 
-Account::Account(string user_id, string user_name, string pw, int priority) {
+Account::Account(std::string user_id, std::string user_name, std::string pw, int priority) {
     strcpy(this->user_id_, user_id.c_str());
     strcpy(this->password_, pw.c_str());
     strcpy(this->user_name_, user_name.c_str());
@@ -24,11 +24,11 @@ Account &Account::operator=(const Account &obj) {
     return *this;
 }
 
-string Account::GetPasswd() { return this->password_; }
-string Account::GetUserId() { return this->user_id_; }
+std::string Account::GetPasswd() { return this->password_; }
+std::string Account::GetUserId() { return this->user_id_; }
 int Account::GetPriority() { return this->priority_; }
 
-void Register(string &user_id, string &password, string &user_name) {
+void Register(std::string &user_id, std::string &password, std::string &user_name) {
     MainInfo<Account> account_info("account_info");
     try {
         account_info.FindInfo(user_id);
@@ -39,7 +39,7 @@ void Register(string &user_id, string &password, string &user_name) {
     }
 }
 
-bool Login(string &user_id, string password = "") {
+bool Login(std::string &user_id, std::string password = "") {
     if (password == "") return true;
     MainInfo<Account> account_info("account_info");
     Account tmp = account_info.FindInfo(user_id);  // copy constructor
@@ -47,8 +47,8 @@ bool Login(string &user_id, string password = "") {
     return false;
 }
 
-void Passwd(string &user_id, string new_password, int priority,
-            string old_password) {
+void Passwd(std::string &user_id, std::string new_password, int priority,
+            std::string old_password) {
     MainInfo<Account> account_info("account_info");
     // note!!! may slower the program
     Account tmp = account_info.FindInfo(user_id);
@@ -61,13 +61,13 @@ void Passwd(string &user_id, string new_password, int priority,
         throw Error();
 }
 
-void Delete(string &user_id) {
+void Delete(std::string &user_id) {
     MainInfo<Account> account_info("account_info");
     account_info.DeleteInfo(user_id);
 }
 
-void Account::UserAdd(string &user_id, string &password, int priority,
-                      string &user_name) {
+void Account::UserAdd(std::string &user_id, std::string &password, int priority,
+                      std::string &user_name) {
     if (this->priority_ <= priority) throw Error();
     MainInfo<Account> account_info("account_info");
     try {

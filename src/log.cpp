@@ -11,15 +11,14 @@
 
 #include "account.h"
 #include "error.h"
-using namespace std;
-Log::Log(string file_name) {
+Log::Log(std::string file_name) {
     this->file_name_ = file_name;
-    ifstream in_1(file_name, ifstream::in);
+    std::ifstream in_1(file_name, std::ifstream::in);
 
     if (!in_1) {
-        ofstream out(file_name, ofstream::out);
+        std::ofstream out(file_name, std::ofstream::out);
         int num = 0;
-        fstream ffile(file_name, fstream::in | fstream::binary | fstream::out);
+        std::fstream ffile(file_name, std::fstream::in | std::fstream::binary | std::fstream::out);
         ffile.write(reinterpret_cast<char *>(&num), sizeof(int));
         ffile.close();
     }
@@ -27,9 +26,9 @@ Log::Log(string file_name) {
 
 Log::~Log() {}
 
-void Log::Record(string rec) {
+void Log::Record(std::string rec) {
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     num++;
@@ -44,15 +43,15 @@ void Log::Record(string rec) {
 
 void Log::ShowFinance(int times) {
     if (times == 0) {
-        cout << "\n";
+        std::cout << "\n";
         return;
     }
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     // if (num == 0) {
-    //     cout << "+ 0.00 - 0.00\n";
+    //     std::cout << "+ 0.00 - 0.00\n";
     //     ffile.close();
     //     return;
     // }
@@ -73,29 +72,29 @@ void Log::ShowFinance(int times) {
     }
     ffile.close();
     if (out < 0)
-        cout << "+ " << fixed << setprecision(2) << in << " "
-             << "- " << fixed << setprecision(2) << (-out) << "\n";
+        std::cout << "+ " << std::fixed << std::setprecision(2) << in << " "
+             << "- " << std::fixed << std::setprecision(2) << (-out) << "\n";
     else
-        cout << "+ " << fixed << setprecision(2) << in << " "
-             << "- " << fixed << setprecision(2) << (out) << "\n";
+        std::cout << "+ " << std::fixed << std::setprecision(2) << in << " "
+             << "- " << std::fixed << std::setprecision(2) << (out) << "\n";
 }
 
 LogForAll::LogForAll() {
-    const string file_name = "allog";
-    ifstream in_1(file_name, ifstream::in);
+    const std::string file_name = "allog";
+    std::ifstream in_1(file_name, std::ifstream::in);
 
     if (!in_1) {
-        ofstream out(file_name, ofstream::out);
+        std::ofstream out(file_name, std::ofstream::out);
         int num = 0;
-        fstream ffile(file_name, fstream::in | fstream::binary | fstream::out);
+        std::fstream ffile(file_name, std::fstream::in | std::fstream::binary | std::fstream::out);
         ffile.write(reinterpret_cast<char *>(&num), sizeof(int));
         ffile.close();
     }
 }
 
-void LogForAll::Record(string rec) {
+void LogForAll::Record(std::string rec) {
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     num++;
@@ -110,7 +109,7 @@ void LogForAll::Record(string rec) {
 
 void LogForAll::Show() {
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     char rec_char[100];
@@ -118,14 +117,14 @@ void LogForAll::Show() {
         memset(rec_char, 0, sizeof(rec_char));
         ffile.seekg(sizeof(int) + i * sizeof(rec_char));
         ffile.read(reinterpret_cast<char *>(rec_char), sizeof(rec_char));
-        cout << rec_char << endl;
+        std::cout << rec_char << std::endl;
     }
     ffile.close();
 }
 
 void LogForAll::ShowMyself(Account &account) {
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     char rec_char[100];
@@ -134,8 +133,8 @@ void LogForAll::ShowMyself(Account &account) {
         memset(rec_char, 0, sizeof(rec_char));
         ffile.seekg(sizeof(int) + pos * sizeof(rec_char));
         ffile.read(reinterpret_cast<char *>(rec_char), sizeof(rec_char));
-        stringstream ss(rec_char);
-        string user_id, action;
+        std::stringstream ss(rec_char);
+        std::string user_id, action;
         for (int i = 1; i <= 3; i++) {
             ss >> action;
         }
@@ -151,14 +150,14 @@ void LogForAll::ShowMyself(Account &account) {
         memset(rec_char, 0, sizeof(rec_char));
         ffile.seekg(sizeof(int) + i * sizeof(rec_char));
         ffile.read(reinterpret_cast<char *>(rec_char), sizeof(rec_char));
-        cout << rec_char << endl;
+        std::cout << rec_char << std::endl;
     }
     ffile.close();
 }
 
 void LogForAll::ShowEmployee() {
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     char rec_char[100];
@@ -166,17 +165,17 @@ void LogForAll::ShowEmployee() {
         memset(rec_char, 0, sizeof(rec_char));
         ffile.seekg(sizeof(int) + i * sizeof(rec_char));
         ffile.read(reinterpret_cast<char *>(rec_char), sizeof(rec_char));
-        stringstream ss(rec_char);
-        string priority;
+        std::stringstream ss(rec_char);
+        std::string priority;
         for (int i = 1; i <= 2; i++) ss >> priority;
-        if (priority == "3") cout << rec_char << endl;
+        if (priority == "3") std::cout << rec_char << std::endl;
     }
     ffile.close();
 }
 
 void LogForAll::ShowTransaction() {
     int num = 0;
-    fstream ffile(file_name_, fstream::in | fstream::binary | fstream::out);
+    std::fstream ffile(file_name_, std::fstream::in | std::fstream::binary | std::fstream::out);
     ffile.seekg(0);
     ffile.read(reinterpret_cast<char *>(&num), sizeof(int));
     char rec_char[100];
@@ -184,10 +183,10 @@ void LogForAll::ShowTransaction() {
         memset(rec_char, 0, sizeof(rec_char));
         ffile.seekg(sizeof(int) + i * sizeof(rec_char));
         ffile.read(reinterpret_cast<char *>(rec_char), sizeof(rec_char));
-        stringstream ss(rec_char);
-        string action;
+        std::stringstream ss(rec_char);
+        std::string action;
         for (int i = 1; i <= 3; i++) ss >> action;
-        if (action == "buy" || action == "import") cout << rec_char << endl;
+        if (action == "buy" || action == "import") std::cout << rec_char << std::endl;
     }
     ffile.close();
 }
